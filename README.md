@@ -16,7 +16,7 @@ SquawkAI permette di:
 
 ## Come utilizzarlo (flusso previsto)
 
-1. **Carica/indica i documenti locali** (AIP, procedure, regolamenti, ecc.).
+1. **Carica/indica i documenti locali** (AIP, procedure, regolamenti, etc.).
 2. **Indicizza i contenuti** nel database locale.
 3. **Apri l’interfaccia web** e avvia la conversazione con SquawkAI.
 4. **Fai domande operative** (regole, meteo, procedure, comunicazioni).
