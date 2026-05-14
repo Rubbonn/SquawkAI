@@ -1,0 +1,53 @@
+:root {
+	@media (prefers-reduced-motion: no-preference) {
+	  scroll-behavior: smooth;
+	}
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
+	&::before, &::after {
+		box-sizing: border-box;
+	}
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+input,
+button,
+select,
+optgroup,
+textarea {
+	margin: 0;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+button,
+select {
+	text-transform: none;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+img, svg {
+	vertical-align: middle;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-wrap: balance;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
