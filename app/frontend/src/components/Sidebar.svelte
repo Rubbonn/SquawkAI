@@ -1,14 +1,14 @@
 <style lang="scss">
 	.sidebar {
-		padding: 16px;
+		padding: var(--space-3);
 		width: 25%;
-		border-right: 1px solid var(--outline-primary);
+		border-right: 1px solid var(--border-default);
 		height: 100%;
-		background-color: var(--background-primary);
+		background-color: var(--bg-sidebar);
 
 		&__title {
-			color: var(--color-secondary);
-			margin-bottom: 24px;
+			color: var(--accent);
+			margin-bottom: var(--space-4);
 		}
 	}
 </style>

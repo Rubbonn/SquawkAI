@@ -1,25 +1,32 @@
 <style lang="scss">
     .weather-page {
         &__header {
-            margin-bottom: 16px;
+            margin-bottom: var(--space-3);
         }
 
         &__title {
-            color: var(--color-tertiary);
-            margin-bottom: 4px;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        &__subtitle {
+            color: var(--text-secondary);
+        }
+
+        &__search {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
         &__input-search {
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid var(--outline-primary);
-            background-color: #1B263B;
-            color: #C5C6CD;
             width: 512px;
         }
 
         &__search-button {
             font-size: 0.75rem;
+            line-height: 1;
+            min-height: 40px;
         }
     }
 </style>
@@ -30,8 +37,8 @@
         <p class="weather-page__subtitle technical">ZULU: {time.toString({'smallestUnit':'seconds'})} | LCL: {localTime.toString({'smallestUnit':'seconds'})}</p>
     </div>
     <div class="weather-page__search">
-        <input type="text" name="icao" placeholder="STATION WEATHER LOOKUP (E.G. KJFK)" class="weather-page__input-search technical">
-        <button type="button" class="weather-page__search-button btn-secondary">LOOKUP</button>
+        <input type="text" name="icao" placeholder="STATION WEATHER LOOKUP (E.G. KJFK)" class="weather-page__input-search input-field technical">
+        <button type="button" class="weather-page__search-button btn-primary">LOOKUP</button>
     </div>
 </div>
 
