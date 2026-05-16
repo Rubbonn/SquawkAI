@@ -19,6 +19,7 @@
 			&:hover {
 				background-color: var(--bg-elevated);
 				border-color: var(--border-default);
+				cursor: pointer;
 			}
 
 			&.active {

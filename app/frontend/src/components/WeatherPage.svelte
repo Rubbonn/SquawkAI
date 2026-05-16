@@ -34,7 +34,7 @@
 <div class="weather-page">
 	<div class="weather-page__header">
 		<h1 class="weather-page__title">Weather & Planning</h1>
-		<p class="weather-page__subtitle technical">ZULU: {time.toString({'smallestUnit':'seconds'})} | LCL: {localTime.toString({'smallestUnit':'seconds'})}</p>
+		<p class="weather-page__subtitle technical">ZULU: {`${localTime.getUTCHours()}:${localTime.getUTCMinutes()}:${localTime.getUTCSeconds()}`} | LCL: {`${localTime.getHours()}:${localTime.getMinutes()}:${localTime.getSeconds()}`}</p>
 	</div>
 	<div class="weather-page__search">
 		<input type="text" name="icao" placeholder="STATION WEATHER LOOKUP (E.G. KJFK)" class="weather-page__input-search input-field technical" bind:value={icao}>
@@ -44,11 +44,10 @@
 
 <script lang="ts">
 	import { onDestroy } from "svelte";
-	let localTime = $state(Temporal.Now.plainTimeISO());
-	let time = $state(Temporal.Now.plainTimeISO('UTC'));
+	import { SvelteDate } from "svelte/reactivity";
+	let localTime = new SvelteDate();
 	let timer = setInterval(() => {
-		localTime = Temporal.Now.plainTimeISO();
-		time = Temporal.Now.plainTimeISO('UTC');
+		localTime.setTime(Date.now());
 	}, 1000);
 	let icao = $state('');
 
