@@ -1,9 +1,10 @@
 import argparse
 
+# TODO Rimuovere dopo i test
 from app.utils import Bridge
 import sys
 b = Bridge()
-b.get_airport_weather('LIRF')
+b.get_airport_weather('LIRD')
 sys.exit(0)
 
 def is_desktop_available() -> bool:
