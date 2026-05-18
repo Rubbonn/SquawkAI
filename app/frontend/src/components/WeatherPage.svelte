@@ -45,6 +45,7 @@
 <script lang="ts">
 	import { onDestroy } from "svelte";
 	import { SvelteDate } from "svelte/reactivity";
+	import { bridge } from "../backend-bridge.ts";
 	let localTime = new SvelteDate();
 	let timer = setInterval(() => {
 		localTime.setTime(Date.now());
@@ -56,17 +57,9 @@
 	});
 
 	const fetchWeather = async (icao: string) => {
-		if (!icao) return;
 		try {
-			let response = await fetch(`https://aviationweather.gov/api/data/metar?ids=${icao}&format=json`, {
-				method: 'GET',
-				headers: {
-					'Accept': 'application/json',
-					'User-Agent': 'SquawkAI/1.0 (contact: gujojo@hotmail.it)'
-				}
-			});
-			response = await response.json();
-			console.log(response);
+			const weatherData = await bridge.getAirportWeather(icao);
+			console.log(weatherData);
 		} catch (error) {
 			console.error("Error fetching weather data:", error);
 		}
