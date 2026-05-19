@@ -7,14 +7,13 @@ class Bridge(QObject):
         try:
             response = httpx.get('https://aviationweather.gov/api/data/metar', params={'ids': icao, 'format': 'json'}, headers={'User-Agent': 'SquawkAI/1.0'})
             response.raise_for_status()
-            metar = response.json()
+            metar = response.json() if response.status_code == httpx.codes.OK else None
             response = httpx.get('https://aviationweather.gov/api/data/taf', params={'ids': icao, 'format': 'json'}, headers={'User-Agent': 'SquawkAI/1.0'})
             response.raise_for_status()
-            taf = response.json()
+            taf = response.json() if response.status_code == httpx.codes.OK else None
         except httpx.HTTPError as e:
             raise RuntimeError(f'Errore durante il recupero dei dati meteo: {e}')
         
-        print(metar[0], taf[0])
         return {
             'metar': metar,
             'taf': taf

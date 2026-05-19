@@ -59,7 +59,6 @@
 	const fetchWeather = async (icao: string) => {
 		try {
 			const weatherData = await bridge.getAirportWeather(icao);
-			console.log(weatherData);
 		} catch (error) {
 			console.error("Error fetching weather data:", error);
 		}

@@ -454,3 +454,5 @@ if (typeof module === 'object') {
         QWebChannel: QWebChannel
     };
 }
+
+export { QWebChannel };

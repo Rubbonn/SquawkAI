@@ -1,3 +1,4 @@
+import { QWebChannel, QWebChannelTransport, type QWebChannelInstance } from "./lib/qwebchannel.js";
 import { Metar, Taf } from "./lib/types";
 declare const qt: { webChannelTransport: unknown } | undefined;
 
@@ -8,35 +9,23 @@ interface BackendBridge {
 let bridge: BackendBridge;
 
 if (typeof qt === 'undefined') {
+	throw new Error('Qt WebChannel transport is not available. Make sure to run this application within the appropriate environment.');
+}
+
+new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebChannelInstance) => {
 	bridge = {
 		getAirportWeather: async (icaoId: string) => {
-			if (!icaoId) return { metar: null, taf: null };
-			try {
-				interface AirportWeatherResponse {
-					metar: Metar | null;
-					taf: Taf | null;
+			return new Promise((resolve, reject) => {
+				try {
+					channel.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null }) => {
+						resolve(response);
+					});
+				} catch (error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 				}
-
-				const httpResponse = await fetch(`/ajax/airport-weather?icao=${icaoId}`, {
-					method: 'GET',
-					headers: {
-						'Accept': 'application/json',
-						'User-Agent': 'SquawkAI/1.0 (contact: gujojo@hotmail.it)'
-					}
-				});
-				const response = await httpResponse.json() as AirportWeatherResponse;
-
-				return {
-					metar: response.metar || null,
-					taf: response.taf || null
-				};
-			} catch (error) {
-				throw new Error(`Failed to fetch weather data for ${icaoId}: ${error instanceof Error ? error.message : String(error)}`);
-			}
+			});
 		}
 	}
-} else {
-	bridge = {} as BackendBridge;
-}
+});
 
 export { bridge };
