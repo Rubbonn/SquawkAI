@@ -3,5 +3,11 @@
   "features": {
     "ghcr.io/devcontainers/features/desktop-lite:1": {}
   },
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libegl1 libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0"
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libegl1 libgl1-mesa-dev libxkbcommon-x11-0 libxcb-cursor0",
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "desktop"
+    }
+  }
 }
