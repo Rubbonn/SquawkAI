@@ -12,7 +12,7 @@ class Bridge(QObject):
             response.raise_for_status()
             taf = response.json() if response.status_code == httpx.codes.OK else None
         except httpx.HTTPError as e:
-            raise RuntimeError(f'Errore durante il recupero dei dati meteo: {e}')
+            return {'error': f'HTTP error occurred: {e}'}
         
         return {
             'metar': metar,

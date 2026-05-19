@@ -3,7 +3,7 @@ import { Metar, Taf } from "./lib/types";
 declare const qt: { webChannelTransport: unknown } | undefined;
 
 interface BackendBridge {
-	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null }>;
+	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null } | { error: string }>;
 }
 
 let bridge: BackendBridge;
@@ -17,7 +17,11 @@ new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebCh
 		getAirportWeather: async (icaoId: string) => {
 			return new Promise((resolve, reject) => {
 				try {
-					channel.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null }) => {
+					let timer = setTimeout(() => {
+						reject(new Error('Backend method call timed out after 30 seconds'));
+					}, 30000);
+					channel.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null } | { error: string }) => {
+						clearTimeout(timer);
 						resolve(response);
 					});
 				} catch (error) {
