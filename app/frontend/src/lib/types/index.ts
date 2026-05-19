@@ -1,3 +1,3 @@
-import { Metar, Taf } from "./aviation-weather.types";
+import type { Metar, Taf } from "./aviation-weather.types.ts";
 
-export { Metar, Taf };
+export type { Metar, Taf };
