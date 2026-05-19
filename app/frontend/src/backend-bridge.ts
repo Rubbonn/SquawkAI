@@ -3,7 +3,7 @@ import { Metar, Taf } from "./lib/types";
 declare const qt: { webChannelTransport: unknown } | undefined;
 
 interface BackendBridge {
-	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null } | { error: string }>;
+	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null }>;
 }
 
 let bridge: BackendBridge;
@@ -22,6 +22,10 @@ new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebCh
 					}, 30000);
 					channel.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null } | { error: string }) => {
 						clearTimeout(timer);
+						if ('error' in response) {
+							reject(new Error(`Backend error: ${response.error}`));
+							return;
+						}
 						resolve(response);
 					});
 				} catch (error) {
