@@ -48,7 +48,7 @@
 			background-color: var(--bg-app);
 		}
 
-		h1, h2, h3, h4, h5, h6 {
+		h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 			font-family: 'Hanken Grotesk', sans-serif;
 			font-weight: bold;
 			font-size: 2rem;
@@ -130,6 +130,13 @@
 			padding: var(--space-2) var(--space-3);
 		}
 
+		.ui-code {
+			background-color: #000F20;
+			border: 1px solid var(--border-default);
+			border-radius: var(--radius-sm);
+			padding: var(--space-2);
+		}
+
 		.content-wrapper {
 			padding: var(--space-5);
 			background-color: var(--bg-app);
@@ -142,6 +149,15 @@
 			line-height: 20px;
 			font-size: 0.875rem;
 			letter-spacing: 0.05em;
+		}
+
+		.text-small {
+			font-size: 0.75rem;
+			line-height: 16px;
+		}
+
+		.text-center {
+			text-align: center;
 		}
 	}
 </style>
