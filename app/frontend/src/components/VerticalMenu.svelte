@@ -47,5 +47,5 @@
 </div>
 
 <script lang="ts">
-	import { currentPage } from '../app-context.svelte.ts';
+	import { currentPage } from '../state/current-page.svelte.ts';
 </script>

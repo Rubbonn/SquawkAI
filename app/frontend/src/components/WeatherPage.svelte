@@ -41,7 +41,7 @@
 		<input type="text" name="icao" placeholder="STATION WEATHER LOOKUP (E.G. KJFK)" class="weather-page__input-search input-field technical" bind:value={icao}>
 		<button type="button" class="weather-page__search-button btn-primary" onclick={() => fetchWeather(icao)}>LOOKUP</button>
 	</div>
-	<div class="weather-page_list">
+	<div class="weather-page__list">
 		{#each Object.entries(weatherDataList) as [icao, data]}
 			<AirportWeatherCard {icao} metar={data.metar} taf={data.taf} />
 		{/each}
@@ -51,7 +51,7 @@
 <script lang="ts">
 	import { onDestroy } from "svelte";
 	import { SvelteDate } from "svelte/reactivity";
-	import { bridge } from "../backend-bridge.ts";
+	import { bridge } from "../services/backend-bridge.ts";
 	import type { Metar, Taf } from "../lib/types";
     import AirportWeatherCard from "./AirportWeatherCard.svelte";
 	

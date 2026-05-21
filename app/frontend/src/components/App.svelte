@@ -121,6 +121,12 @@
 			border: 1px solid var(--border-default);
 			border-radius: var(--radius-lg);
 			padding: var(--space-3);
+
+			.ui-card {
+				background-color: var(--bg-sidebar);
+				border: 1px solid var(--border-default);
+				border-radius: var(--radius-sm);
+			}
 		}
 
 		.ui-highlight {
@@ -177,5 +183,5 @@
 <script lang="ts">
 	import Sidebar from './Sidebar.svelte';
 	import WeatherPage from './WeatherPage.svelte';
-	import { currentPage } from '../app-context.svelte.ts';
+	import { currentPage } from '../state/current-page.svelte.ts';
 </script>
