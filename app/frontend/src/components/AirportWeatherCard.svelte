@@ -71,7 +71,7 @@
 			}
 		}
 
-		&__wind {
+		&__wind, &__visibility, &__clouds {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -130,7 +130,11 @@
 			</div>
 			<span class="text-small">{metar?.wspd}{#if metar?.wgst}G{metar?.wgst}{/if} KT</span>
 		</div>
-		<div class="airport-weather__visibility ui-card"></div>
+		<div class="airport-weather__visibility ui-card">
+			<span class="text-small">VISIBILITY</span>
+			<p>{metar?.visib} SM</p>
+			<p>{metar?.wxString}</p>
+		</div>
 		<div class="airport-weather__clouds ui-card"></div>
 	</div>
 	{/if}
