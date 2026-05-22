@@ -41,7 +41,7 @@
 </style>
 
 <div class="vertical-menu">
-	<button type="button" class={["vertical-menu__item", currentPage.page === 'chat' && "active"]} onclick={() => currentPage.page = 'chat'}><img src="/icons/chat.png" alt="Chat Icon" class="vertical-menu__item-icon">Chat</button>
+	<button type="button" class={["vertical-menu__item", currentPage.page === 'map' && "active"]} onclick={() => currentPage.page = 'map'}><img src="/icons/chat.png" alt="Map Icon" class="vertical-menu__item-icon">Map</button>
 	<button type="button" class={["vertical-menu__item", currentPage.page === 'weather' && "active"]} onclick={() => currentPage.page = 'weather'}><img src="/icons/chat.png" alt="Chat Icon" class="vertical-menu__item-icon">Weather Data</button>
 	<button type="button" class={["vertical-menu__item", currentPage.page === 'documents' && "active"]} onclick={() => currentPage.page = 'documents'}><img src="icons/chat.png" alt="Chat Icon" class="vertical-menu__item-icon">Documents</button>
 </div>

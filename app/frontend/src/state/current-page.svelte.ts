@@ -1,4 +1,4 @@
-type Page = 'chat' | 'weather' | 'documents';
+type Page = 'map' | 'weather' | 'documents';
 
 const currentPage: {
 	page: Page;
