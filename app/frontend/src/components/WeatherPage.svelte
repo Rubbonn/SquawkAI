@@ -44,7 +44,7 @@
 	<div class="weather-page__list">
 	{#if AirportWeatherCard}
 		{#each Object.entries(weatherDataList) as [icao, data]}
-			<AirportWeatherCard {icao} metar={data.metar} taf={data.taf} />
+			<AirportWeatherCard {icao} metar={data.metar} taf={data.taf} onrefresh={fetchWeather} onclose={() => delete weatherDataList[icao]} />
 		{/each}
 	{/if}
 	</div>
@@ -55,7 +55,7 @@
 	import { SvelteDate } from "svelte/reactivity";
 	import { bridge } from "../services/backend-bridge.ts";
 	import type { Metar, Taf } from "../lib/types";
-	
+
 	let AirportWeatherCard: typeof import("./AirportWeatherCard.svelte").default | null = $state(null);
 	let localTime = new SvelteDate();
 	let timer = setInterval(() => {

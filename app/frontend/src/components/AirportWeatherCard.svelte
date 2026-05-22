@@ -108,7 +108,11 @@
 <div class="airport-weather ui-card">
 	<div class="airport-weather__header">
 		<div><span class="airport-weather__title h2">{icao}</span> <span class="airport-weather__subtitle technical">{name}</span> <span class="airport-weather__category text-small technical {metar?.fltCat}">{metar?.fltCat}</span></div>
-		<span class="airport-weather__observation-time technical">Updated: {obsTimeText}</span>
+		<div>
+			<span class="airport-weather__observation-time technical">Updated: {obsTimeText}</span>
+			<button onclick={() => onrefresh && onrefresh(icao)} class="btn-secondary text-small"><img src="/icons/rotate-solid__accent.svg" alt="Refresh" width="16" height="16"></button>
+			<button onclick={() => onclose && onclose(icao)} class="btn-ghost text-small"><img src="/icons/x-solid__text-primary.svg" alt="Close" width="16" height="16"></button>
+		</div>
 	</div>
 	{#if metar}
 	<div class="airport-weather__metar">
@@ -126,7 +130,7 @@
 	<div class="airport-weather__summary">
 		<div class="airport-weather__wind ui-card">
 			<span class="text-small">WIND {#if metar?.wgst}(GUST){/if}</span>
-			<div class="airport-weather__wind-graph" style:--wind-dir={`${metar?.wdir}deg`}>
+			<div class="airport-weather__wind-graph" style:--wind-dir={metar?.wdir !== 'VRB' ? `${metar?.wdir}deg` : '0deg'}>
 				<span>{metar?.wdir}°</span>
 			</div>
 			<span class="text-small">{metar?.wspd}{#if metar?.wgst}G{metar?.wgst}{/if} KT</span>
@@ -154,8 +158,8 @@
 
 <script lang="ts">
 	import type { Metar, Taf } from "../lib/types";
-	let { icao, metar, taf }: { icao: string; metar: Metar | null; taf: Taf | null } = $props();
+	let { icao, metar, taf, onclose, onrefresh }: { icao: string; metar: Metar | null; taf: Taf | null; onclose?: (icao: string) => void; onrefresh?: (icao: string) => void } = $props();
 	const name = $derived(metar?.name || taf?.name || "Unknown Airport");
-	const obsTime = $derived(metar ? new Date(metar.obsTime) : null);
+	const obsTime = $derived(metar ? new Date(metar.obsTime * 1000) : null);
 	const obsTimeText = $derived(obsTime ? `${obsTime.getUTCHours().toString().padStart(2, '0')}:${obsTime.getUTCMinutes().toString().padStart(2, '0')}z` : "N/A");
 </script>

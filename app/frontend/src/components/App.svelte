@@ -62,6 +62,15 @@
 			font-family: 'Inter', sans-serif;
 			font-weight: 600;
 			transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+			background-color: transparent;
+			color: var(--text-primary);
+			border-color: transparent;
+
+			&:hover {
+				background-color: var(--bg-elevated);
+				border-color: var(--border-default);
+				cursor: pointer;
+			}
 		}
 
 		.btn-primary {
@@ -88,6 +97,7 @@
 
 			&:hover {
 				background-color: rgba(255, 184, 107, 0.12);
+				border-color: var(--accent);
 				cursor: pointer;
 			}
 
