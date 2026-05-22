@@ -1,6 +1,7 @@
 <style lang="scss">
 	.airport-weather {
 		border-radius: var(--radius-md);
+		margin-bottom: var(--space-2);
 
 		&__header {
 			display: flex;
@@ -131,11 +132,22 @@
 			<span class="text-small">{metar?.wspd}{#if metar?.wgst}G{metar?.wgst}{/if} KT</span>
 		</div>
 		<div class="airport-weather__visibility ui-card">
-			<span class="text-small">VISIBILITY</span>
+			<span class="text-small">VIS & WX</span>
 			<p>{metar?.visib} SM</p>
+			<p>QNH {metar?.altim} hPA</p>
+			<p>Temp {metar?.temp}°C/{metar?.dewp}°C</p>
 			<p>{metar?.wxString}</p>
 		</div>
-		<div class="airport-weather__clouds ui-card"></div>
+		<div class="airport-weather__clouds ui-card">
+			<span class="text-small">CLOUDS</span>
+			{#if metar?.clouds.length > 0}
+				{#each metar.clouds as cloud}
+					<p>{cloud.cover} {cloud.base ? `at ${cloud.base} ft` : ""}</p>
+				{/each}
+			{:else}
+				<p>CLR</p>
+			{/if}
+		</div>
 	</div>
 	{/if}
 </div>

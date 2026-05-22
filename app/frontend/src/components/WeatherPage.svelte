@@ -42,9 +42,11 @@
 		<button type="button" class="weather-page__search-button btn-primary" onclick={() => fetchWeather(icao)}>LOOKUP</button>
 	</div>
 	<div class="weather-page__list">
+	{#if AirportWeatherCard}
 		{#each Object.entries(weatherDataList) as [icao, data]}
 			<AirportWeatherCard {icao} metar={data.metar} taf={data.taf} />
 		{/each}
+	{/if}
 	</div>
 </div>
 
@@ -53,8 +55,8 @@
 	import { SvelteDate } from "svelte/reactivity";
 	import { bridge } from "../services/backend-bridge.ts";
 	import type { Metar, Taf } from "../lib/types";
-    import AirportWeatherCard from "./AirportWeatherCard.svelte";
 	
+	let AirportWeatherCard: typeof import("./AirportWeatherCard.svelte").default | null = $state(null);
 	let localTime = new SvelteDate();
 	let timer = setInterval(() => {
 		localTime.setTime(Date.now());
@@ -72,6 +74,7 @@
 			icao = icao.toUpperCase();
 			const weatherData = await bridge.getAirportWeather(icao);
 			if(!weatherData.metar && !weatherData.taf) return;
+			AirportWeatherCard = (await import("./AirportWeatherCard.svelte")).default;
 			weatherDataList[icao] = weatherData;
 		} catch (error) {
 			console.error("Error fetching weather data:", error);

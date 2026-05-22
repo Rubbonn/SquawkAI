@@ -4,6 +4,8 @@
         "allowImportingTsExtensions": true,
         "allowJs": true,
         "declaration": true,
-        "declarationMap": true
+        "declarationMap": true,
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true
     }
 }
