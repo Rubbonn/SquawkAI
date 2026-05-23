@@ -1,64 +1,96 @@
 # SquawkAI
 
-SquawkAI è un chatbot locale progettato per rispondere a domande aeronautiche consultando le pubblicazioni AIP disponibili sul computer dell’utente.
+SquawkAI è un’app desktop sperimentale per consultazione operativa meteo aeronautica, con interfaccia cockpit-style e integrazione Python ↔ Svelte tramite Qt WebChannel.
 
-L’obiettivo è offrire un assistente affidabile per piloti e operatori del settore, capace di unire consultazione documentale, pianificazione rotta e supporto meteo in un’unica interfaccia semplice.
+Questo README è stato aggiornato in base all’evoluzione del progetto dai commit successivi a `5b98f25`.
 
-## Cosa fa il progetto
+## Stato attuale del progetto
 
-SquawkAI permette di:
+Attualmente il focus implementato è sul **modulo meteo aeroportuale**:
 
-- leggere e interpretare documentazione aeronautica (AIP e altri PDF locali);
-- rispondere a domande su regole di volo nazionali, procedure aeroportuali e comunicazioni operative;
-- generare una rotta e mostrarla su una cartina virtuale;
-- integrare dati meteo di rotta tramite servizi METAR e TAF;
-- evolvere verso un controllo automatico della rotta con integrazione Eurocontrol (funzionalità prevista).
+- ricerca METAR/TAF per ICAO;
+- visualizzazione dati meteo in schede multiple;
+- refresh e chiusura singola scheda;
+- indicatori rapidi (categoria volo VFR/MVFR/IFR, vento, visibilità, nubi, dati grezzi).
 
-## Come utilizzarlo (flusso previsto)
+Sono presenti anche:
 
-1. **Carica/indica i documenti locali** (AIP, procedure, regolamenti, etc.).
-2. **Indicizza i contenuti** nel database locale.
-3. **Apri l’interfaccia web** e avvia la conversazione con SquawkAI.
-4. **Fai domande operative** (regole, meteo, procedure, comunicazioni).
-5. **Genera e visualizza la rotta** su mappa, con supporto alle informazioni meteo disponibili.
+- **sidebar con navigazione** (`Weather`, `Map`, `Documents`);
+- **pagina mappa** iniziale (work in progress);
+- **pagina documenti** placeholder (work in progress).
 
-## Funzionalità principali
+Le funzionalità chatbot/AIP pianificate inizialmente non sono ancora integrate nel codice corrente.
 
-- **Q&A aeronautico locale** basato sui documenti presenti sul PC.
-- **Comprensione documentale PDF** per estrarre informazioni operative utili.
-- **Pianificazione rotta** con visualizzazione geografica interattiva.
-- **Supporto meteo di rotta** tramite METAR/TAF.
-- **Indicizzazione locale** dei documenti con SQLite.
-- **Estensibilità** verso verifica rotta su servizi esterni (es. Eurocontrol).
+## Architettura
 
-## Stack tecnologico
+### Runtime applicazione
 
-### Backend
-- **Python**
-- **FastAPI**
+- **Host desktop**: Python + PySide6 (`QWebEngineView`)
+- **UI**: SPA Svelte 5 + Vite
+- **Bridge IPC**: Qt `QWebChannel` in runtime desktop
+- **Modalità sviluppo frontend**: bridge mock via fetch HTTP (con proxy CORS)
 
-### Frontend
-- **WebView** con **SPA in Svelte**
+### Flusso meteo
 
-### Intelligenza Artificiale
-- **Gemini** (scelta per capacità nativa di lettura PDF)
+1. L’utente inserisce un ICAO nella pagina meteo.
+2. Il frontend invoca `bridge.getAirportWeather`.
+3. In desktop mode, Python richiama `aviationweather.gov` (METAR + TAF).
+4. Il risultato viene renderizzato in card con indicatori sintetici e raw report.
 
-### Dati e persistenza
-- **SQLite locale** per indicizzazione e ricerca documentale
+## Struttura repository
 
-### Mappe e visualizzazione rotta
-- **Leaflet** per cartografia e rappresentazione della rotta
+- `/main.py`: avvio app desktop Qt + registrazione bridge WebChannel
+- `/app/utils.py`: metodo backend `get_airport_weather`
+- `/app/frontend`: applicazione Svelte/Vite
+- `/.devcontainer`: ambiente di sviluppo con desktop remoto (VNC/noVNC)
+- `/DESIGN.md`: token e linee guida visual
 
-### Integrazioni esterne (previste)
-- Servizi **METAR/TAF** (provider da definire)
-- Verifica automatica rotta con **Eurocontrol** (se fattibile)
+## Requisiti
 
-## Utenti target
+- Python 3.10+
+- Node.js 20+
+- npm
 
-- Piloti VFR/IFR
-- Flight dispatcher e operatori aeronautici
-- Studenti pilota e appassionati che vogliono consultare documentazione tecnica in modo più rapido
+Dipendenze Python principali:
 
-## Visione
+- `pyside6`
+- `httpx`
 
-SquawkAI vuole diventare un copilota digitale locale: veloce da consultare, trasparente nelle fonti documentali e utile sia per utenti esperti sia per chi è in formazione.
+## Avvio in sviluppo locale
+
+### 1) Frontend (Svelte)
+
+```bash
+cd /home/runner/work/SquawkAI/SquawkAI/app/frontend
+npm ci
+npm run dev
+```
+
+### 2) App desktop (Python + Qt)
+
+In un secondo terminale:
+
+```bash
+cd /home/runner/work/SquawkAI/SquawkAI
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
+
+## Ambiente Dev Container
+
+Il repository include configurazione `.devcontainer` con:
+
+- immagine `universal:linux`;
+- setup automatico Xvfb + x11vnc + noVNC;
+- porta `6080` per desktop remoto nel browser.
+
+## Note implementative rilevanti dai commit recenti
+
+- refactor progressivo del bridge frontend/backend con gestione errori e timeout;
+- introduzione mock bridge per sviluppo locale;
+- miglioramento design system e componentizzazione UI;
+- introduzione card meteo dinamiche e ottimizzazioni bundle;
+- aggiunta indicatori operativi (vento, visibilità, flight category);
+- avvio iniziale della pagina mappa.
