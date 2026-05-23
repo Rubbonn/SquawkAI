@@ -1,25 +1,40 @@
 # SquawkAI
 
-SquawkAI è un’app desktop sperimentale per consultazione operativa meteo aeronautica, con interfaccia cockpit-style e integrazione Python ↔ Svelte tramite Qt WebChannel.
+SquawkAI è un copilota digitale locale per supportare piloti e operatori aeronautici nella consultazione tecnica, nella pianificazione e nell’analisi operativa del volo.
 
-Questo README è stato aggiornato in base all’evoluzione del progetto dai commit successivi a `5b98f25`.
+L’obiettivo del progetto resta unire in un’unica applicazione:
 
-## Stato attuale del progetto
+- consultazione documentale aeronautica locale (AIP/PDF);
+- supporto meteo operativo (METAR/TAF);
+- pianificazione e visualizzazione rotta;
+- assistenza contestuale tramite interfaccia tecnica dedicata.
 
-Attualmente il focus implementato è sul **modulo meteo aeroportuale**:
+## Funzionalità del progetto
 
-- ricerca METAR/TAF per ICAO;
-- visualizzazione dati meteo in schede multiple;
-- refresh e chiusura singola scheda;
-- indicatori rapidi (categoria volo VFR/MVFR/IFR, vento, visibilità, nubi, dati grezzi).
+### Area documentale e assistente
 
-Sono presenti anche:
+- Indicizzazione locale di documenti aeronautici (AIP e materiali correlati).
+- Q&A operativo su procedure, regolamenti e comunicazioni.
+- Estensione prevista verso analisi documentale avanzata con supporto AI.
 
-- **sidebar con navigazione** (`Weather`, `Map`, `Documents`);
-- **pagina mappa** iniziale (work in progress);
-- **pagina documenti** placeholder (work in progress).
+### Area meteo
 
-Le funzionalità chatbot/AIP pianificate inizialmente non sono ancora integrate nel codice corrente.
+- Ricerca meteo per aeroporto via codice ICAO.
+- Recupero METAR e TAF con visualizzazione raw e sintetica.
+- Schede meteo multiple con refresh e chiusura singola.
+- Indicatori rapidi per categoria volo, vento, visibilità e nubi.
+
+### Area rotta e navigazione
+
+- Navigazione interna tra sezioni (`Weather`, `Map`, `Documents`).
+- Pagina mappa dedicata alla visualizzazione rotta (in evoluzione).
+- Integrazione prevista con controlli/validazioni rotta su servizi esterni.
+
+## Utenti target
+
+- Piloti VFR/IFR.
+- Flight dispatcher e operatori aeronautici.
+- Studenti pilota e appassionati che necessitano consultazione tecnica rapida e tracciabile.
 
 ## Architettura
 
@@ -30,12 +45,31 @@ Le funzionalità chatbot/AIP pianificate inizialmente non sono ancora integrate 
 - **Bridge IPC**: Qt `QWebChannel` in runtime desktop
 - **Modalità sviluppo frontend**: bridge mock via fetch HTTP (con proxy CORS)
 
-### Flusso meteo
+### Flusso tecnico principale (meteo)
 
 1. L’utente inserisce un ICAO nella pagina meteo.
 2. Il frontend invoca `bridge.getAirportWeather`.
 3. In desktop mode, Python richiama `aviationweather.gov` (METAR + TAF).
 4. Il risultato viene renderizzato in card con indicatori sintetici e raw report.
+
+## Stack tecnologico
+
+### Backend
+
+- Python
+- PySide6
+- httpx
+
+### Frontend
+
+- Svelte 5
+- Vite
+- Sass
+
+### Infrastruttura locale
+
+- Qt WebEngine + Qt WebChannel (integrazione desktop/web)
+- Dev Container con Xvfb + x11vnc + noVNC
 
 ## Struttura repository
 
@@ -85,12 +119,3 @@ Il repository include configurazione `.devcontainer` con:
 - immagine `universal:linux`;
 - setup automatico Xvfb + x11vnc + noVNC;
 - porta `6080` per desktop remoto nel browser.
-
-## Note implementative rilevanti dai commit recenti
-
-- refactor progressivo del bridge frontend/backend con gestione errori e timeout;
-- introduzione mock bridge per sviluppo locale;
-- miglioramento design system e componentizzazione UI;
-- introduzione card meteo dinamiche e ottimizzazioni bundle;
-- aggiunta indicatori operativi (vento, visibilità, flight category);
-- avvio iniziale della pagina mappa.
