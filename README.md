@@ -9,6 +9,23 @@ L’obiettivo del progetto resta unire in un’unica applicazione:
 - pianificazione e visualizzazione rotta;
 - assistenza contestuale via chat con risposta testuale e/o visualizzazione su mappa.
 
+## Perché è utile (anche per chi non è tecnico)
+
+SquawkAI nasce per ridurre il tempo necessario a cercare informazioni operative e trasformarle in decisioni pratiche.
+
+Esempi d’uso:
+
+- **Briefing pre-volo più rapido**: l’utente chiede in chat una sintesi di meteo e vincoli operativi, ottenendo una risposta unica e leggibile.
+- **Controllo documentale contestuale**: durante la preparazione, la chat richiama procedure e riferimenti documentali pertinenti alla fase del volo.
+- **Supporto alla pianificazione rotta**: la conversazione può evolvere in proposta di rotta con rappresentazione sulla mappa.
+- **Spiegazione visiva delle procedure**: procedure o passaggi complessi possono essere mostrati sulla mappa per una comprensione più immediata.
+
+Problemi che aiuta a risolvere:
+
+- frammentazione tra fonti diverse (documenti, meteo, strumenti separati);
+- tempi lunghi di consultazione e cross-check;
+- difficoltà nel passare da informazione testuale a visione spaziale/operativa.
+
 ## Funzionalità del progetto
 
 ### Area documentale e assistente
@@ -54,6 +71,12 @@ L’obiettivo del progetto resta unire in un’unica applicazione:
 2. Il frontend invoca `bridge.getAirportWeather`.
 3. In desktop mode, Python richiama `aviationweather.gov` (METAR + TAF).
 4. Il risultato viene renderizzato in card con indicatori sintetici e raw report.
+
+### Perché queste scelte tecnologiche
+
+- **Svelte + Vite**: interfaccia reattiva e leggera, avvio rapido in sviluppo e manutenzione più semplice nel tempo.
+- **Qt WebChannel (IPC)**: canale chiaro tra frontend e backend desktop, utile per separare responsabilità e integrare dati esterni in modo ordinato.
+- **Architettura locale-first**: maggiore controllo operativo del runtime applicativo desktop e migliore integrazione con workflow tecnici esistenti.
 
 ## Stack tecnologico
 
