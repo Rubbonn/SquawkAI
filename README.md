@@ -1,20 +1,21 @@
 # SquawkAI
 
-SquawkAI è un copilota digitale locale per supportare piloti e operatori aeronautici nella consultazione tecnica, nella pianificazione e nell’analisi operativa del volo.
+SquawkAI è un copilota digitale locale incentrato su una **chat tecnica con LLM** per supportare piloti e operatori aeronautici nella consultazione, nella pianificazione e nell’analisi operativa del volo.
 
 L’obiettivo del progetto resta unire in un’unica applicazione:
 
 - consultazione documentale aeronautica locale (AIP/PDF);
 - supporto meteo operativo (METAR/TAF);
 - pianificazione e visualizzazione rotta;
-- assistenza contestuale tramite interfaccia tecnica dedicata.
+- assistenza contestuale via chat con risposta testuale e/o visualizzazione su mappa.
 
 ## Funzionalità del progetto
 
 ### Area documentale e assistente
 
 - Indicizzazione locale di documenti aeronautici (AIP e materiali correlati).
-- Q&A operativo su procedure, regolamenti e comunicazioni.
+- Chat LLM per Q&A operativo su procedure, regolamenti e comunicazioni.
+- Correlazione delle risposte con dati meteo e altre fonti informative disponibili.
 - Estensione prevista verso analisi documentale avanzata con supporto AI.
 
 ### Area meteo
@@ -28,6 +29,8 @@ L’obiettivo del progetto resta unire in un’unica applicazione:
 
 - Navigazione interna tra sezioni (`Weather`, `Map`, `Documents`).
 - Pagina mappa dedicata alla visualizzazione rotta (in evoluzione).
+- Supporto previsto a generazione rotta tramite chat con rendering su mappa.
+- Possibile visualizzazione guidata di procedure direttamente su mappa a fini esplicativi.
 - Integrazione prevista con controlli/validazioni rotta su servizi esterni.
 
 ## Utenti target
