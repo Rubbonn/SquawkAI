@@ -34,14 +34,16 @@
 						tiles: ['https://nwy-tiles-api.prod.newaydata.com/tiles/{z}/{x}/{y}.jpg?path=latest/base/latest'],
 						tileSize: 512,
 						minzoom: 7,
-						maxzoom: 12
+						maxzoom: 12,
+						attribution: ["(c) open flightmaps association", "(c) openstreetmap contributors", "NASA elevation data"].join(', ')
 					},
 					openflightmapsAero: {
 						type: 'raster',
 						tiles: ['https://nwy-tiles-api.prod.newaydata.com/tiles/{z}/{x}/{y}.png?path=latest/aero/latest'],
 						tileSize: 512,
 						minzoom: 7,
-						maxzoom: 12
+						maxzoom: 12,
+						attribution: ["(c) open flightmaps association", "(c) openstreetmap contributors", "NASA elevation data"].join(', ')
 					},
 				},
 				layers: [
@@ -59,8 +61,9 @@
 			},
 			minZoom: 7,
 			maxZoom: 12,
+			maxPitch: 0,
 			center: [12.4964, 41.9028],
-		});
+		}).addControl(new maplibregl.NavigationControl(), 'top-right');
 		return () => {
 			map.remove();
 		}
