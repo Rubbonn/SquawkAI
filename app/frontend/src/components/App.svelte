@@ -202,6 +202,8 @@
 		<WeatherPage />
 	{:else if currentPage.page === 'documents'}
 		<DocumentsPage />
+	{:else if currentPage.page === 'settings'}
+		<SettingsPage />
 	{/if}
 </div>
 
@@ -210,5 +212,6 @@
 	import MapPage from './MapPage.svelte';
 	import WeatherPage from './WeatherPage.svelte';
 	import DocumentsPage from './DocumentsPage.svelte';
+	import SettingsPage from './SettingsPage.svelte';
 	import { currentPage } from '../state/current-page.svelte.ts';
 </script>

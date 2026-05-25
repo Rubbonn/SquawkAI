@@ -41,9 +41,10 @@
 </style>
 
 <div class="vertical-menu">
-	<button type="button" class={["vertical-menu__item", currentPage.page === 'map' && "active"]} onclick={() => currentPage.page = 'map'}><img src="/icons/chat.png" alt="Map Icon" class="vertical-menu__item-icon">Map</button>
-	<button type="button" class={["vertical-menu__item", currentPage.page === 'weather' && "active"]} onclick={() => currentPage.page = 'weather'}><img src="/icons/chat.png" alt="Chat Icon" class="vertical-menu__item-icon">Weather Data</button>
-	<button type="button" class={["vertical-menu__item", currentPage.page === 'documents' && "active"]} onclick={() => currentPage.page = 'documents'}><img src="icons/chat.png" alt="Chat Icon" class="vertical-menu__item-icon">Documents</button>
+	<button type="button" class={["vertical-menu__item", currentPage.page === 'map' && "active"]} onclick={() => currentPage.page = 'map'}><img src="/icons/map-solid__text-secondary.svg" alt="Map Icon" class="vertical-menu__item-icon">Map</button>
+	<button type="button" class={["vertical-menu__item", currentPage.page === 'weather' && "active"]} onclick={() => currentPage.page = 'weather'}><img src="/icons/cloud-sun-rain-solid__text-secondary.svg" alt="Chat Icon" class="vertical-menu__item-icon">Weather Data</button>
+	<button type="button" class={["vertical-menu__item", currentPage.page === 'documents' && "active"]} onclick={() => currentPage.page = 'documents'}><img src="icons/file-solid__text-secondary.svg" alt="Chat Icon" class="vertical-menu__item-icon">Documents</button>
+	<button type="button" class={["vertical-menu__item", currentPage.page === 'settings' && "active"]} onclick={() => currentPage.page = 'settings'}><img src="icons/gear-solid__text-secondary.svg" alt="Chat Icon" class="vertical-menu__item-icon">Settings</button>
 </div>
 
 <script lang="ts">
