@@ -2,6 +2,6 @@ type Page = 'map' | 'weather' | 'documents';
 
 const currentPage: {
 	page: Page;
-} = $state({ page: 'map' });
+} = $state({ page: 'documents' });
 
 export { currentPage };

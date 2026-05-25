@@ -201,7 +201,7 @@
 	{:else if currentPage.page === 'weather'}
 		<WeatherPage />
 	{:else if currentPage.page === 'documents'}
-		<div>Documents Page</div>
+		<DocumentsPage />
 	{/if}
 </div>
 
@@ -209,5 +209,6 @@
 	import Sidebar from './Sidebar.svelte';
 	import MapPage from './MapPage.svelte';
 	import WeatherPage from './WeatherPage.svelte';
+	import DocumentsPage from './DocumentsPage.svelte';
 	import { currentPage } from '../state/current-page.svelte.ts';
 </script>
