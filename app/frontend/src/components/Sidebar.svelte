@@ -5,6 +5,8 @@
 		border-right: 1px solid var(--border-default);
 		height: 100%;
 		background-color: var(--bg-sidebar);
+		display: flex;
+		flex-direction: column;
 
 		&__title {
 			color: var(--accent);
@@ -16,8 +18,10 @@
 <div class="sidebar">
 	<h1 class="sidebar__title">SquawkAI</h1>
 	<VerticalMenu />
+	<Chat />
 </div>
 
 <script lang="ts">
 	import VerticalMenu from "./VerticalMenu.svelte";
+	import Chat from "./Chat.svelte";
 </script>

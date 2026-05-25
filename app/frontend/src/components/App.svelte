@@ -107,6 +107,13 @@
 			}
 		}
 
+		input[type='text'],
+		input[type='search'],
+		input[type='email'],
+		input[type='password'],
+		input[type='url'],
+		input[type='tel'],
+		textarea,
 		.input-field {
 			padding: var(--space-2) var(--space-3);
 			border-radius: var(--radius-md);
@@ -174,6 +181,14 @@
 
 		.text-center {
 			text-align: center;
+		}
+
+		.w-100 {
+			width: 100%;
+		}
+
+		.h-100 {
+			height: 100%;
 		}
 	}
 </style>
