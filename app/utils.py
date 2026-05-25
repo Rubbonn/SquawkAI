@@ -1,4 +1,4 @@
-from PySide6.QtCore import QObject, Slot
+from PySide6.QtCore import QObject, Slot, QSettings
 
 class Bridge(QObject):
     @Slot(str, result=dict)
@@ -18,3 +18,13 @@ class Bridge(QObject):
             'metar': metar,
             'taf': taf
         }
+    
+    @Slot(str, result=str)
+    def get_setting(self, key: str) -> str:
+        settings = QSettings()
+        return str(settings.value(key, defaultValue='', type=str))
+    
+    @Slot(str, str, result=None)
+    def set_setting(self, key: str, value: str) -> None:
+        settings = QSettings()
+        settings.setValue(key, value)

@@ -4,6 +4,8 @@ declare const qt: { webChannelTransport: unknown } | undefined;
 
 interface BackendBridge {
 	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null }>;
+	getSetting(key: string): Promise<string | null>;
+	setSetting(key: string, value: string | boolean | number): Promise<void>;
 }
 
 let bridge: BackendBridge;
@@ -21,6 +23,14 @@ if(import.meta.env.DEV) {
 				metar: metar && metar[0],
 				taf: taf && taf[0]
 			}
+		},
+		getSetting: async (key: string) => {
+			// Return mock setting value
+			return window.localStorage.getItem(key) || null;
+		},
+		setSetting: async (key: string, value: string | boolean | number) => {
+			// Store setting value in localStorage
+			window.localStorage.setItem(key, String(value));
 		}
 	}
 } else {
@@ -47,6 +57,22 @@ if(import.meta.env.DEV) {
 					} catch (error) {
 						reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 					}
+				});
+			},
+			getSetting: async (key: string) => {
+				return new Promise((resolve, reject) => {
+					let value: string | null = channel.objects.bridge.get_setting(key);
+					if (value === null) {
+						reject(new Error(`Setting with key "${key}" not found`));
+					} else {
+						resolve(value);
+					}
+				});
+			},
+			setSetting: async (key: string, value: string | boolean | number) => {
+				return new Promise((resolve, reject) => {
+					channel.objects.bridge.set_setting(key, String(value));
+					resolve();
 				});
 			}
 		}

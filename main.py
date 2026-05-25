@@ -4,6 +4,10 @@ if __name__ == "__main__":
 	from PySide6.QtWidgets import QApplication
 	from PySide6.QtWebEngineWidgets import QWebEngineView
 	from PySide6.QtWebChannel import QWebChannel
+
+	QApplication.setOrganizationName('Ruben Giuriato')
+	QApplication.setOrganizationDomain('https://github.com/Rubbonn/SquawkAI')
+	QApplication.setApplicationName('SquawkAI')
 	app = QApplication([])
 
 	browser = QWebEngineView()
