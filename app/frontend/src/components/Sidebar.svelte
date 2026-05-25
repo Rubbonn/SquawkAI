@@ -1,7 +1,7 @@
 <style lang="scss">
 	.sidebar {
 		padding: var(--space-3);
-		width: 25%;
+		width: 33%;
 		border-right: 1px solid var(--border-default);
 		height: 100%;
 		background-color: var(--bg-sidebar);

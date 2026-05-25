@@ -35,6 +35,12 @@
 		&__input {
 			display: flex;
 			gap: var(--space-2);
+
+			textarea {
+				resize: none;
+				overflow-y: auto;
+				max-height: 200px;
+			}
 		}
 	}
 </style>
@@ -62,7 +68,16 @@
 		</div>
 	</div>
 	<div class="chat__input">
-		<input type="text" class="w-100" name="message" placeholder="Type your message..."/>
+		<textarea rows="1" class="w-100" name="message" placeholder="Type your message..." bind:this={textarea} oninput={adjustTextareaHeight}></textarea>
 		<button class="btn btn-secondary text-small">Send</button>
 	</div>
 </div>
+
+<script lang="ts">
+	let textarea: HTMLTextAreaElement;
+
+	const adjustTextareaHeight = () => {
+		textarea.style.height = 'auto';
+		textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+	};
+</script>
