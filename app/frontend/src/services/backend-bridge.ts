@@ -1,4 +1,4 @@
-import { QWebChannel, QWebChannelTransport, type QWebChannelInstance } from "../lib/qwebchannel.js";
+import { QWebChannel, type QWebChannelTransport, type QWebChannelInstance } from "../lib/qwebchannel.js";
 import type { Metar, Taf } from "../lib/types";
 declare const qt: { webChannelTransport: unknown } | undefined;
 
