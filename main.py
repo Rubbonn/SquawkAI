@@ -15,7 +15,7 @@ if __name__ == "__main__":
 	app = QApplication([])
 
 	browser = QWebEngineView()
-	target = QUrl.fromLocalFile(os.path.abspath('app/frontend/dist/index.html')) if os.environ.get('NODE_ENV') == 'production' else QUrl('http://localhost:5173')
+	target = QUrl('http://localhost:4173') if os.environ.get('NODE_ENV') == 'production' else QUrl('http://localhost:5173')
 	browser.load(target)
 	browser.resize(1280, 1024)
 	browser.show()

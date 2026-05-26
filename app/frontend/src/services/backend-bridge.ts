@@ -6,6 +6,8 @@ interface BackendBridge {
 	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null }>;
 	getSetting(key: string): Promise<string | null>;
 	setSetting(key: string, value: string | boolean | number): Promise<void>;
+	indexNewFiles(): Promise<void>;
+	indexNewFolder(): Promise<void>;
 }
 
 let bridge: BackendBridge;
@@ -31,6 +33,14 @@ if(import.meta.env.DEV) {
 		setSetting: async (key: string, value: string | boolean | number) => {
 			// Store setting value in localStorage
 			window.localStorage.setItem(key, String(value));
+		},
+		indexNewFiles: async () => {
+			// Mock implementation, does nothing
+			console.log('Indexing new files (mock)');
+		},
+		indexNewFolder: async () => {
+			// Mock implementation, does nothing
+			console.log('Indexing new folder (mock)');
 		}
 	}
 } else {
@@ -87,7 +97,19 @@ if(import.meta.env.DEV) {
 			return new Promise((resolve) => {
 				webChannel!.objects.bridge.set_setting(key, String(value), resolve);
 			});
-		}
+		},
+		indexNewFiles: async () => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve) => {
+				webChannel!.objects.bridge.index_new_files(resolve);
+			});
+		},
+		indexNewFolder: async () => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve) => {
+				webChannel!.objects.bridge.index_new_folder(resolve);
+			});
+		},
 	};
 }
 

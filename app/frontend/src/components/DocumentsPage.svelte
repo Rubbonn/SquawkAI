@@ -33,7 +33,32 @@
 		<div class="documents-page__upload-area">
 			<img src="/icons/upload.png" alt="Upload Icon" width="48" height="48" />
 			<p class="text-small technical">Upload operational manuals, NOTAMs, or charts. Supported formats: PDF, DOCX, TXT.</p>
-			<button class="btn btn-primary">Select files and folders</button>
+			<button class="btn btn-primary" onclick={handleFilesClick}>Select files</button>
+			<button class="btn btn-primary" onclick={handleFoldersClick}>Select folders</button>
 		</div>
 	</div>
 </div>
+
+<script lang="ts">
+	import { bridge } from '../services/backend-bridge';
+
+	const handleFilesClick = async () => {
+		try {
+			await bridge.indexNewFiles();
+			alert('Files indexed successfully!');
+		} catch (error) {
+			console.error('Error indexing files:', error);
+			alert('Failed to index files. Please try again.');
+		}
+	};
+
+	const handleFoldersClick = async () => {
+		try {
+			await bridge.indexNewFolder();
+			alert('Folder indexed successfully!');
+		} catch (error) {
+			console.error('Error indexing folder:', error);
+			alert('Failed to index folder. Please try again.');
+		}
+	};
+</script>

@@ -28,3 +28,15 @@ class Bridge(QObject):
     def set_setting(self, key: str, value: str) -> None:
         settings = QSettings()
         settings.setValue(key, value)
+
+    @Slot(result=None)
+    def index_new_files(self) -> None:
+        from PySide6.QtWidgets import QFileDialog
+        filenames = QFileDialog.getOpenFileNames(None, "Select Files to Index")
+        print(filenames)
+
+    @Slot(result=None)
+    def index_new_folder(self) -> None:
+        from PySide6.QtWidgets import QFileDialog
+        foldername = QFileDialog.getExistingDirectory(None, "Select Folder to Index")
+        print(foldername)
