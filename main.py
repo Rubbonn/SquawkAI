@@ -1,3 +1,7 @@
+import dotenv
+import os
+dotenv.load_dotenv()
+
 if __name__ == "__main__":
 	from app.utils import Bridge
 	from PySide6.QtCore import QUrl
@@ -11,7 +15,8 @@ if __name__ == "__main__":
 	app = QApplication([])
 
 	browser = QWebEngineView()
-	browser.load(QUrl('http://localhost:5173'))
+	target = QUrl.fromLocalFile(os.path.abspath('app/frontend/dist/index.html')) if os.environ.get('NODE_ENV') == 'production' else QUrl('http://localhost:5173')
+	browser.load(target)
 	browser.resize(1280, 1024)
 	browser.show()
 

@@ -1,11 +1,33 @@
 {
+  "_disclose-version-BhQpU561.js": {
+    "file": "assets/disclose-version-BhQpU561.js",
+    "name": "disclose-version"
+  },
   "index.html": {
-    "file": "assets/index-3GvI70FC.js",
+    "file": "assets/index-BVV-QZkn.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
+    "imports": [
+      "_disclose-version-BhQpU561.js"
+    ],
+    "dynamicImports": [
+      "src/components/AirportWeatherCard.svelte"
+    ],
     "css": [
-      "assets/index-Ch62y8mo.css"
+      "assets/index-vAWHuoae.css"
+    ]
+  },
+  "src/components/AirportWeatherCard.svelte": {
+    "file": "assets/AirportWeatherCard-DUXb1Kr_.js",
+    "name": "AirportWeatherCard",
+    "src": "src/components/AirportWeatherCard.svelte",
+    "isDynamicEntry": true,
+    "imports": [
+      "_disclose-version-BhQpU561.js"
+    ],
+    "css": [
+      "assets/AirportWeatherCard-DASy0Llz.css"
     ]
   }
 }
