@@ -38,45 +38,57 @@ if(import.meta.env.DEV) {
 		throw new Error('Qt WebChannel transport is not available. Make sure to run this application within the appropriate environment.');
 	}
 
-	new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebChannelInstance) => {
-		bridge = {
-			getAirportWeather: async (icaoId: string) => {
-				return new Promise((resolve, reject) => {
-					try {
-						let timer = setTimeout(() => {
-							reject(new Error('Backend method call timed out after 30 seconds'));
-						}, 30000);
-						channel.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null } | { error: string }) => {
-							clearTimeout(timer);
-							if ('error' in response) {
-								reject(new Error(`Backend error: ${response.error}`));
-								return;
-							}
-							resolve(response);
-						});
-					} catch (error) {
-						reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
-					}
-				});
-			},
-			getSetting: async (key: string) => {
-				return new Promise((resolve, reject) => {
-					let value: string | null = channel.objects.bridge.get_setting(key);
-					if (value === null) {
-						reject(new Error(`Setting with key "${key}" not found`));
-					} else {
-						resolve(value);
-					}
-				});
-			},
-			setSetting: async (key: string, value: string | boolean | number) => {
-				return new Promise((resolve, reject) => {
-					channel.objects.bridge.set_setting(key, String(value));
-					resolve();
-				});
-			}
+	let webChannel: QWebChannelInstance | null = null;
+
+	const getWebChannel = (): Promise<void> => {
+		return new Promise((resolve) => {
+			new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebChannelInstance) => {
+				webChannel = channel;
+				resolve();
+			});
+		})
+	}
+
+	bridge = {
+		getAirportWeather: async (icaoId: string) => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve, reject) => {
+				try {
+					let timer = setTimeout(() => {
+						reject(new Error('Backend method call timed out after 30 seconds'));
+					}, 30000);
+					webChannel!.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null } | { error: string }) => {
+						clearTimeout(timer);
+						if ('error' in response) {
+							reject(new Error(`Backend error: ${response.error}`));
+							return;
+						}
+						resolve(response);
+					});
+				} catch (error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
+			});
+		},
+		getSetting: async (key: string) => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve, reject) => {
+				let value: string | null = webChannel!.objects.bridge.get_setting(key);
+				if (value === null) {
+					reject(new Error(`Setting with key "${key}" not found`));
+				} else {
+					resolve(value);
+				}
+			});
+		},
+		setSetting: async (key: string, value: string | boolean | number) => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve) => {
+				webChannel!.objects.bridge.set_setting(key, String(value));
+				resolve();
+			});
 		}
-	});
+	};
 }
 
 export { bridge };
