@@ -1,3 +1,5 @@
 dotenv
 httpx
+langchain
+langchain-google-genai
 pyside6
