@@ -73,19 +73,19 @@ if(import.meta.env.DEV) {
 		getSetting: async (key: string) => {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
-				let value: string | null = webChannel!.objects.bridge.get_setting(key);
-				if (value === null) {
-					reject(new Error(`Setting with key "${key}" not found`));
-				} else {
-					resolve(value);
-				}
+				webChannel!.objects.bridge.get_setting(key, (result: string | null) => {
+					if (result === null) {
+						reject(new Error(`Setting with key "${key}" not found`));
+					} else {
+						resolve(result);
+					}
+				});
 			});
 		},
 		setSetting: async (key: string, value: string | boolean | number) => {
 			webChannel || await getWebChannel();
 			return new Promise((resolve) => {
-				webChannel!.objects.bridge.set_setting(key, String(value));
-				resolve();
+				webChannel!.objects.bridge.set_setting(key, String(value), resolve);
 			});
 		}
 	};
