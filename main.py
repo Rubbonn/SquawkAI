@@ -13,11 +13,9 @@ if __name__ == "__main__":
 	QApplication.setOrganizationDomain('https://github.com/Rubbonn/SquawkAI')
 	QApplication.setApplicationName('SquawkAI')
 
-	from app.utils.llm import get_chat_model, get_chat_agent
-	from langchain.messages import HumanMessage, TextContentBlock, FileContentBlock
+	from app.utils.documents import DocumentIndex
 	import sys
-	llm = get_chat_agent()
-	print(llm.invoke({'messages':[HumanMessage(content_blocks=[TextContentBlock(type='text', text='Ciao! Esamina questo pdf'), FileContentBlock(type='file', url='https://www.awn.it/attachments/article/1280/Allegato_B_Istruzioni_creazione_PDF.pdf')])]}))
+	DocumentIndex().add_document('C:/Users/rgiur/Desktop/LG_AD_2_LGKA_en.pdf')
 	sys.exit(0)
 
 	app = QApplication([])
