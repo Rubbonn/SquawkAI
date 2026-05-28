@@ -13,11 +13,6 @@ if __name__ == "__main__":
 	QApplication.setOrganizationDomain('https://github.com/Rubbonn/SquawkAI')
 	QApplication.setApplicationName('SquawkAI')
 
-	from app.utils.documents import DocumentIndex
-	import sys
-	print(DocumentIndex().documents)
-	sys.exit(0)
-
 	app = QApplication([])
 
 	browser = QWebEngineView()

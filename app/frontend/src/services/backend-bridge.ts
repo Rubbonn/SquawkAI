@@ -6,13 +6,13 @@ interface BackendBridge {
 	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null }>;
 	getSetting(key: string): Promise<string | null>;
 	setSetting(key: string, value: string | boolean | number): Promise<void>;
-	indexNewFiles(): Promise<void>;
+	indexNewFiles(): Promise<{ error: string | false; }>;
 	indexNewFolder(): Promise<void>;
 }
 
 let bridge: BackendBridge;
 
-if(import.meta.env.DEV) {
+if(typeof qt === 'undefined' && import.meta.env.DEV) {
 	// Mock implementation for development environment
 	bridge = {
 		getAirportWeather: async (icaoId: string) => {
@@ -37,6 +37,7 @@ if(import.meta.env.DEV) {
 		indexNewFiles: async () => {
 			// Mock implementation, does nothing
 			console.log('Indexing new files (mock)');
+			return { error: false };
 		},
 		indexNewFolder: async () => {
 			// Mock implementation, does nothing
