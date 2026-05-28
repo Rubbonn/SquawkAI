@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
 	from app.utils.documents import DocumentIndex
 	import sys
-	DocumentIndex().add_document('C:/Users/rgiur/Desktop/LG_AD_2_LGKA_en.pdf')
+	print(DocumentIndex().documents)
 	sys.exit(0)
 
 	app = QApplication([])
