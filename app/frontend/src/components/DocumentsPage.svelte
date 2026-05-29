@@ -38,12 +38,15 @@
 		</div>
 	</div>
 	<div class="documents-page__right-column">
+		<CollapsibleCard>
+		</CollapsibleCard>
 	</div>
 </div>
 
 <script lang="ts">
 	import { bridge } from '../services/backend-bridge';
 	import { documentIndex } from '../state/document-index.svelte';
+	import CollapsibleCard from './CollapsibleCard.svelte';
 
 	const handleFilesClick = async () => {
 		try {
@@ -76,4 +79,18 @@
 			alert('Failed to index folder. Please try again.');
 		}
 	};
+
+	let documentTree: { [nation: string]: { [section: string]: Document[] } } = $derived.by(() => {
+		const tree: { [nation: string]: { [section: string]: Document[] } } = {};
+		for(let doc of documentIndex.documents) {
+			if(!tree[doc.nation]) {
+				tree[doc.nation] = {};
+			}
+			if(!tree[doc.nation][doc.section]) {
+				tree[doc.nation][doc.section] = [];
+			}
+			tree[doc.nation][doc.section].push(doc);
+		}
+		return tree;
+	});
 </script>
