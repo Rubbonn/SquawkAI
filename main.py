@@ -3,7 +3,6 @@ import os
 dotenv.load_dotenv()
 
 if __name__ == "__main__":
-	from app.utils.bridge import Bridge
 	from PySide6.QtCore import QUrl
 	from PySide6.QtWidgets import QApplication
 	from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -22,6 +21,7 @@ if __name__ == "__main__":
 	browser.show()
 
 	channel = QWebChannel()
+	from app.utils.bridge import Bridge
 	bridge = Bridge()
 	channel.registerObject('bridge', bridge)
 	browser.page().setWebChannel(channel)

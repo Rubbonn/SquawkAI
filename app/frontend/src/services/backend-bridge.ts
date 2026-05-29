@@ -1,5 +1,6 @@
 import { QWebChannel, type QWebChannelTransport, type QWebChannelInstance } from "../lib/qwebchannel.js";
 import type { Metar, Taf } from "../lib/types";
+import type { Document } from "../state/document-index.svelte";
 declare const qt: { webChannelTransport: unknown } | undefined;
 
 interface BackendBridge {
@@ -8,6 +9,8 @@ interface BackendBridge {
 	setSetting(key: string, value: string | boolean | number): Promise<void>;
 	indexNewFiles(): Promise<{ error: string | false; }>;
 	indexNewFolder(): Promise<void>;
+	getDocuments(): Promise<Document[]>;
+	documentIndexUpdated(callback: (documents: Document[]) => void): void;
 }
 
 let bridge: BackendBridge;
@@ -42,6 +45,14 @@ if(typeof qt === 'undefined' && import.meta.env.DEV) {
 		indexNewFolder: async () => {
 			// Mock implementation, does nothing
 			console.log('Indexing new folder (mock)');
+		},
+		getDocuments: async () => {
+			// Mock implementation, does nothing
+			console.log('Fetching documents (mock)');
+			return [{ name: 'Sample Document', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.' }];
+		},
+		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
+			// Mock implementation, does nothing
 		}
 	}
 } else {
@@ -50,14 +61,18 @@ if(typeof qt === 'undefined' && import.meta.env.DEV) {
 	}
 
 	let webChannel: QWebChannelInstance | null = null;
+	let webChannelPromise: Promise<void> | null = null;
 
 	const getWebChannel = (): Promise<void> => {
-		return new Promise((resolve) => {
-			new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebChannelInstance) => {
-				webChannel = channel;
-				resolve();
+		if(!webChannelPromise) {
+			webChannelPromise = new Promise((resolve) => {
+				new QWebChannel(qt.webChannelTransport as QWebChannelTransport, (channel: QWebChannelInstance) => {
+					webChannel = channel;
+					resolve();
+				});
 			});
-		})
+		}
+		return webChannelPromise;
 	}
 
 	bridge = {
@@ -111,6 +126,16 @@ if(typeof qt === 'undefined' && import.meta.env.DEV) {
 				webChannel!.objects.bridge.index_new_folder(resolve);
 			});
 		},
+		getDocuments: async () => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve) => {
+				webChannel!.objects.bridge.get_documents(resolve);
+			});
+		},
+		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
+			webChannel || await getWebChannel();
+			webChannel!.objects.bridge.document_index_updated.connect(callback);
+		}
 	};
 }
 

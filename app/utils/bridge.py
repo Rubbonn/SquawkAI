@@ -1,7 +1,15 @@
 from app.utils.documents import document_index
-from PySide6.QtCore import QObject, Slot, QSettings
+from pathlib import Path
+from PySide6.QtCore import QObject, Slot, Signal, QSettings
 
 class Bridge(QObject):
+	document_index_updated = Signal(list)
+
+	def __init__(self):
+		super().__init__()
+		document_index.document_added.connect(lambda: self.document_index_updated.emit(document_index.documents))
+		document_index.document_removed.connect(lambda: self.document_index_updated.emit(document_index.documents))
+
 	@Slot(str, result=dict)
 	def get_airport_weather(self, icao: str) -> dict:
 		import httpx
@@ -30,7 +38,7 @@ class Bridge(QObject):
 		settings = QSettings()
 		settings.setValue(key, value)
 
-	@Slot(result=None)
+	@Slot(result=dict)
 	def index_new_files(self) -> dict[str, str | bool]:
 		from PySide6.QtWidgets import QFileDialog
 		filenames = QFileDialog.getOpenFileNames(None, 'Select Files to Index', filter='PDF Files (*.pdf)')[0]
@@ -46,11 +54,26 @@ class Bridge(QObject):
 		
 		return result
 
-	@Slot(result=None)
-	def index_new_folder(self) -> None:
+	@Slot(result=dict)
+	def index_new_folder(self) -> dict[str, str | bool]:
 		from PySide6.QtWidgets import QFileDialog
 		foldername = QFileDialog.getExistingDirectory(None, 'Select Folder to Index')
 		if not foldername:
-			return
+			return {'error': 'No folder selected.'}
 		
-		print(foldername)
+		filenames = list(Path(foldername).rglob('*.pdf'))
+		if len(filenames) == 0:
+			return {'error': 'No PDF files found in the selected folder.'}
+		
+		result: dict[str, str | bool] = {'error': False}
+		for path in filenames:
+			try:
+				document_index.add_document(path)
+			except Exception as e:
+				result['error'] = f'Error indexing file {path}: {e}\n'
+
+		return result
+	
+	@Slot(result=list)
+	def get_documents(self) -> list[dict]:
+		return document_index.documents

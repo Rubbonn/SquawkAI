@@ -4,7 +4,7 @@
 			margin-bottom: var(--space-3);
 		}
 
-		&__left-column {
+		&__left-column, &__right-column {
 			float: left;
 			width: 50%;
 		}
@@ -37,14 +37,23 @@
 			<button class="btn btn-primary" onclick={handleFoldersClick}>Select folders</button>
 		</div>
 	</div>
+	<div class="documents-page__right-column">
+	</div>
 </div>
 
 <script lang="ts">
 	import { bridge } from '../services/backend-bridge';
+	import { documentIndex } from '../state/document-index.svelte';
 
 	const handleFilesClick = async () => {
 		try {
-			await bridge.indexNewFiles();
+			let results = await bridge.indexNewFiles();
+			if(results.error) {
+				console.error('Error indexing files:', results.error);
+				alert(`Failed to index some files. Details: ${results.error}`);
+				return;
+			}
+
 			alert('Files indexed successfully!');
 		} catch (error) {
 			console.error('Error indexing files:', error);
@@ -54,7 +63,13 @@
 
 	const handleFoldersClick = async () => {
 		try {
-			await bridge.indexNewFolder();
+			let results =await bridge.indexNewFolder();
+			if(results.error) {
+				console.error('Error indexing folder:', results.error);
+				alert(`Failed to index folder. Details: ${results.error}`);
+				return;
+			}
+
 			alert('Folder indexed successfully!');
 		} catch (error) {
 			console.error('Error indexing folder:', error);

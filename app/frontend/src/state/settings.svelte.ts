@@ -1,4 +1,4 @@
-import { bridge } from '../services/backend-bridge.ts';
+import { bridge } from '../services/backend-bridge';
 
 interface SettingsInterface {
 	AistudioApiKey: string;
