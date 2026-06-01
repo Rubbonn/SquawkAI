@@ -7,6 +7,7 @@
 		&__left-column, &__right-column {
 			float: left;
 			width: 50%;
+			padding: 0 var(--space-2);
 		}
 
 		&__upload-area {
@@ -38,8 +39,36 @@
 		</div>
 	</div>
 	<div class="documents-page__right-column">
-		<CollapsibleCard>
-		</CollapsibleCard>
+		{#each Object.entries(documentTree) as [nation, sections] (nation)}
+			<CollapsibleCard>
+				{#snippet header()}
+					<h3>{nation}</h3>
+				{/snippet}
+				{#each Object.entries(sections) as [section, docs] (section)}
+					<CollapsibleCard>
+						{#snippet header()}
+							<h4>{section}</h4>
+						{/snippet}
+						{#each docs as doc}
+							<CollapsibleCard>
+								{#snippet header()}
+									<h5>{doc.name}</h5>
+								{/snippet}
+								<ul>
+									<li><strong>Path:</strong> {doc.path}</li>
+									<li><strong>Nation:</strong> {doc.nation}</li>
+									<li><strong>Section:</strong> {doc.section}</li>
+									<li><strong>Section Code:</strong> {doc.section_code}</li>
+									<li><strong>AIRAC:</strong> {doc.airac}</li>
+									<li><strong>Title:</strong> {doc.title}</li>
+									<li><strong>Summary:</strong> {doc.summary}</li>
+								</ul>
+							</CollapsibleCard>
+						{/each}
+					</CollapsibleCard>
+				{/each}
+			</CollapsibleCard>
+		{/each}
 	</div>
 </div>
 

@@ -1,6 +1,17 @@
 <style lang="scss">
+	@use 'sass:map';
+
 	:global {
 		@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+		$heading-scale: (
+            h1: (size: 2rem, line-height: 1.25),
+            h2: (size: 2rem, line-height: 1.25),
+            h3: (size: 1.875rem, line-height: 1.3),
+            h4: (size: 1.75rem, line-height: 1.3),
+            h5: (size: 1.625rem, line-height: 1.35),
+            h6: (size: 1.5rem, line-height: 1.4)
+        );
 
 		:root {
 			/* Simplified cockpit theme tokens */
@@ -51,9 +62,15 @@
 		h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 			font-family: 'Hanken Grotesk', sans-serif;
 			font-weight: bold;
-			font-size: 2rem;
-			line-height: 40px;
 		}
+
+		@each $name, $values in $heading-scale {
+            #{$name},
+            .#{$name} {
+                font-size: map.get($values, size);
+                line-height: map.get($values, line-height);
+            }
+        }
 
 		button, .btn {
 			border-radius: var(--radius-md);

@@ -128,7 +128,7 @@ if(hasWebChannelSupport) {
 		getDocuments: async () => {
 			// Mock implementation, does nothing
 			console.log('Fetching documents (mock)');
-			return [{ name: 'Sample Document', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.' }];
+			return [{ name: 'sample.pdf', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.' }];
 		},
 		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
 			// Mock implementation, does nothing
