@@ -14,52 +14,9 @@ interface BackendBridge {
 }
 
 let bridge: BackendBridge;
+const hasWebChannelSupport = typeof qt !== 'undefined' && !!qt.webChannelTransport;
 
-if(typeof qt === 'undefined' && import.meta.env.DEV) {
-	// Mock implementation for development environment
-	bridge = {
-		getAirportWeather: async (icaoId: string) => {
-			// Return mock data
-			let response = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://aviationweather.gov/api/data/metar?ids=' + icaoId + '&format=json'));
-			let metar = await response.json();
-			response = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://aviationweather.gov/api/data/taf?ids=' + icaoId + '&format=json'));
-			let taf = await response.json();
-			return {
-				metar: metar && metar[0],
-				taf: taf && taf[0]
-			}
-		},
-		getSetting: async (key: string) => {
-			// Return mock setting value
-			return window.localStorage.getItem(key) || null;
-		},
-		setSetting: async (key: string, value: string | boolean | number) => {
-			// Store setting value in localStorage
-			window.localStorage.setItem(key, String(value));
-		},
-		indexNewFiles: async () => {
-			// Mock implementation, does nothing
-			console.log('Indexing new files (mock)');
-			return { error: false };
-		},
-		indexNewFolder: async () => {
-			// Mock implementation, does nothing
-			console.log('Indexing new folder (mock)');
-		},
-		getDocuments: async () => {
-			// Mock implementation, does nothing
-			console.log('Fetching documents (mock)');
-			return [{ name: 'Sample Document', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.' }];
-		},
-		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
-			// Mock implementation, does nothing
-		}
-	}
-} else {
-	if (typeof qt === 'undefined') {
-		throw new Error('Qt WebChannel transport is not available. Make sure to run this application within the appropriate environment.');
-	}
-
+if(hasWebChannelSupport) {
 	let webChannel: QWebChannelInstance | null = null;
 	let webChannelPromise: Promise<void> | null = null;
 
@@ -137,6 +94,49 @@ if(typeof qt === 'undefined' && import.meta.env.DEV) {
 			webChannel!.objects.bridge.document_index_updated.connect(callback);
 		}
 	};
+} else if (import.meta.env.DEV) {
+	// Mock implementation for development environment
+	bridge = {
+		getAirportWeather: async (icaoId: string) => {
+			// Return mock data
+			let response = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://aviationweather.gov/api/data/metar?ids=' + icaoId + '&format=json'));
+			let metar = await response.json();
+			response = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://aviationweather.gov/api/data/taf?ids=' + icaoId + '&format=json'));
+			let taf = await response.json();
+			return {
+				metar: metar && metar[0],
+				taf: taf && taf[0]
+			}
+		},
+		getSetting: async (key: string) => {
+			// Return mock setting value
+			return window.localStorage.getItem(key) || null;
+		},
+		setSetting: async (key: string, value: string | boolean | number) => {
+			// Store setting value in localStorage
+			window.localStorage.setItem(key, String(value));
+		},
+		indexNewFiles: async () => {
+			// Mock implementation, does nothing
+			console.log('Indexing new files (mock)');
+			return { error: false };
+		},
+		indexNewFolder: async () => {
+			// Mock implementation, does nothing
+			console.log('Indexing new folder (mock)');
+		},
+		getDocuments: async () => {
+			// Mock implementation, does nothing
+			console.log('Fetching documents (mock)');
+			return [{ name: 'Sample Document', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.' }];
+		},
+		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
+			// Mock implementation, does nothing
+		}
+	}	
+} else {
+	alert('QWebChannel is not supported in this environment. The application may not function correctly.');
+	throw new Error('QWebChannel is not supported in this environment. Backend bridge cannot be initialized.');
 }
 
 export { bridge };
