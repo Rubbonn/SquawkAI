@@ -42,10 +42,12 @@
 		<button type="button" class="weather-page__search-button btn-primary" onclick={() => fetchWeather(icao)}>LOOKUP</button>
 	</div>
 	<div class="weather-page__list">
-	{#if AirportWeatherCard}
-		{#each Object.entries(weatherDataList) as [icao, data]}
-			<AirportWeatherCard {icao} metar={data.metar} taf={data.taf} onrefresh={fetchWeather} onclose={() => delete weatherDataList[icao]} />
-		{/each}
+	{#if Object.keys(weatherDataList).length > 0}
+		{#await import("./AirportWeatherCard.svelte") then { default: AirportWeatherCard }}
+			{#each Object.entries(weatherDataList) as [icao, data]}
+				<AirportWeatherCard {icao} metar={data.metar} taf={data.taf} onrefresh={fetchWeather} onclose={() => delete weatherDataList[icao]} />
+			{/each}
+		{/await}
 	{/if}
 	</div>
 </div>
@@ -56,7 +58,6 @@
 	import { bridge } from "../services/backend-bridge.ts";
 	import type { Metar, Taf } from "../lib/types";
 
-	let AirportWeatherCard: typeof import("./AirportWeatherCard.svelte").default | null = $state(null);
 	let localTime = new SvelteDate();
 	let timer = setInterval(() => {
 		localTime.setTime(Date.now());
@@ -74,7 +75,6 @@
 			icao = icao.toUpperCase();
 			const weatherData = await bridge.getAirportWeather(icao);
 			if(!weatherData.metar && !weatherData.taf) return;
-			AirportWeatherCard = (await import("./AirportWeatherCard.svelte")).default;
 			weatherDataList[icao] = weatherData;
 		} catch (error) {
 			console.error("Error fetching weather data:", error);

@@ -39,43 +39,46 @@
 		</div>
 	</div>
 	<div class="documents-page__right-column">
-		{#each Object.entries(documentTree) as [nation, sections] (nation)}
-			<CollapsibleCard>
-				{#snippet header()}
-					<h3>{nation}</h3>
-				{/snippet}
-				{#each Object.entries(sections) as [section, docs] (section)}
+		{#if Object.keys(documentTree).length > 0}
+			{#await import("./CollapsibleCard.svelte") then { default: CollapsibleCard }}
+				{#each Object.entries(documentTree) as [nation, sections] (nation)}
 					<CollapsibleCard>
 						{#snippet header()}
-							<h4>{section}</h4>
+							<h3>{nation}</h3>
 						{/snippet}
-						{#each docs as doc}
+						{#each Object.entries(sections) as [section, docs] (section)}
 							<CollapsibleCard>
 								{#snippet header()}
-									<h5>{doc.name}</h5>
+									<h4>{section}</h4>
 								{/snippet}
-								<ul>
-									<li><strong>Path:</strong> {doc.path}</li>
-									<li><strong>Nation:</strong> {doc.nation}</li>
-									<li><strong>Section:</strong> {doc.section}</li>
-									<li><strong>Section Code:</strong> {doc.section_code}</li>
-									<li><strong>AIRAC:</strong> {doc.airac}</li>
-									<li><strong>Title:</strong> {doc.title}</li>
-									<li><strong>Summary:</strong> {doc.summary}</li>
-								</ul>
+								{#each docs as doc}
+									<CollapsibleCard>
+										{#snippet header()}
+											<h5>{doc.name}</h5>
+										{/snippet}
+										<ul>
+											<li><strong>Path:</strong> {doc.path}</li>
+											<li><strong>Nation:</strong> {doc.nation}</li>
+											<li><strong>Section:</strong> {doc.section}</li>
+											<li><strong>Section Code:</strong> {doc.section_code}</li>
+											<li><strong>AIRAC:</strong> {doc.airac}</li>
+											<li><strong>Title:</strong> {doc.title}</li>
+											<li><strong>Summary:</strong> {doc.summary}</li>
+										</ul>
+									</CollapsibleCard>
+								{/each}
 							</CollapsibleCard>
 						{/each}
 					</CollapsibleCard>
 				{/each}
-			</CollapsibleCard>
-		{/each}
+			{/await}
+		{/if}
 	</div>
 </div>
 
 <script lang="ts">
 	import { bridge } from '../services/backend-bridge';
 	import { documentIndex } from '../state/document-index.svelte';
-	import CollapsibleCard from './CollapsibleCard.svelte';
 
 	const handleFilesClick = async () => {
 		try {
