@@ -207,6 +207,27 @@
 		.h-100 {
 			height: 100%;
 		}
+
+		.d-none {
+			display: none;
+		}
+
+		.d-block {
+			display: block;
+		}
+
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.spin {
+			animation: spin 1.5s linear infinite;
+		}
 	}
 </style>
 

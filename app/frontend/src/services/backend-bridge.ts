@@ -11,6 +11,7 @@ interface BackendBridge {
 	indexNewFolder(): Promise<void>;
 	getDocuments(): Promise<Document[]>;
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
+	sendMessage(message: string): Promise<string>;
 }
 
 let bridge: BackendBridge;
@@ -92,6 +93,10 @@ if(hasWebChannelSupport) {
 		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
 			webChannel || await getWebChannel();
 			webChannel!.objects.bridge.document_index_updated.connect(callback);
+		},
+		sendMessage: async (message: string) => {
+			webChannel || await getWebChannel();
+			return 'test'; // Placeholder response until backend implementation is complete
 		}
 	};
 } else if (import.meta.env.DEV) {
@@ -132,6 +137,10 @@ if(hasWebChannelSupport) {
 		},
 		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
 			// Mock implementation, does nothing
+		},
+		sendMessage: async (message: string) => {
+			console.log('Message to backend (mock):', message);
+			return '# Titolo\n\n**Grassetto**, *corsivo*, ~~barrato~~\n\n- Elemento lista\n- Altro elemento\n\n1. Primo\n2. Secondo\n\n[Link](https://example.com)\n\n`codice inline`\n\n```ts\nconst x = 1;\n```\n\n> Citazione';
 		}
 	}	
 } else {
