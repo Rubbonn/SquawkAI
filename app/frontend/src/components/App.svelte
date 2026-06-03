@@ -209,11 +209,11 @@
 		}
 
 		.d-none {
-			display: none;
+			display: none !important;
 		}
 
 		.d-block {
-			display: block;
+			display: block !important;
 		}
 
 		@keyframes spin {

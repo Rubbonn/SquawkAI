@@ -1,9 +1,12 @@
 from app.utils.documents import document_index
+from app.utils.llm import get_chat_agent
+from langchain.messages import AIMessage, HumanMessage
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal, QSettings
 
 class Bridge(QObject):
 	document_index_updated = Signal(list)
+	message_received = Signal(str)
 
 	def __init__(self):
 		super().__init__()
@@ -77,3 +80,14 @@ class Bridge(QObject):
 	@Slot(result=list)
 	def get_documents(self) -> list[dict]:
 		return document_index.documents
+	
+	@Slot(str, result=bool)
+	def send_message(self, message: str) -> bool:
+		agent = get_chat_agent()
+		for response in agent.stream({'messages': [HumanMessage(content=message)]}, stream_mode='updates'):
+			print(response['model']['messages'][-1].content_blocks)
+			message_blocks = response['model']['messages'][-1].content_blocks
+			for block in message_blocks:
+				if block['type'] == 'text':
+					self.message_received.emit(block['text'])
+		return True

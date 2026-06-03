@@ -65,11 +65,11 @@
 		{#each messageHistory as { role, content }}
 			{@render renderMessage(role, content)}
 		{/each}
-		<div class="chat__loader"><img src="/icons/compass-regular__text-primary.svg" class="spin" alt="Loading..." width="64" height="64"/></div>
+		<div class="chat__loader" class:d-none={!waitingForResponse}><img src="/icons/compass-regular__text-primary.svg" class="spin" alt="Loading..." width="64" height="64"/></div>
 	</div>
 	<div class="chat__input">
-		<textarea rows="1" class="w-100" name="message" placeholder="Type your message..." bind:this={textarea} oninput={adjustTextareaHeight} bind:value={message}></textarea>
-		<button class="btn btn-secondary text-small" onclick={sendMessage}>Send</button>
+		<textarea rows="1" class="w-100" name="message" placeholder="Type your message..." bind:this={textarea} oninput={adjustTextareaHeight} bind:value={message} disabled={waitingForResponse}></textarea>
+		<button class="btn btn-secondary text-small" onclick={sendMessage} disabled={waitingForResponse}>Send</button>
 	</div>
 </div>
 
@@ -79,6 +79,7 @@
 	let textarea: HTMLTextAreaElement;
 	let message: string = $state('');
 	let messageHistory: { role: 'user' | 'assistant', content: string }[] = $state([]);
+	let waitingForResponse: boolean = $state(false);
 
 	const adjustTextareaHeight = () => {
 		textarea.style.height = 'auto';
@@ -86,14 +87,22 @@
 	};
 
 	const sendMessage = async () => {
-		if(message.trim() === '')
+		if(message.trim() === '' || waitingForResponse)
 			return;
 
 		messageHistory.push({ role: 'user', content: message });
-		const response = await bridge.sendMessage(message);
-		const parsedResponse = marked.parse(response);
-		messageHistory.push({ role: 'assistant', content: parsedResponse });
-		message = '';
+		waitingForResponse = true;
+		await bridge.sendMessage(message);
 		adjustTextareaHeight();
-	}
+		message = '';
+		waitingForResponse = false;
+	};
+
+	const handleMessageReceived = (newMessage: string) => {
+		const parsedMessage = marked.parse(newMessage) as string;
+		messageHistory.push({ role: 'assistant', content: parsedMessage });
+		adjustTextareaHeight();
+	};
+
+	bridge.messageReceived(handleMessageReceived);
 </script>

@@ -12,6 +12,7 @@ interface BackendBridge {
 	getDocuments(): Promise<Document[]>;
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
 	sendMessage(message: string): Promise<string>;
+	messageReceived(callback: (message: string) => void): void;
 }
 
 let bridge: BackendBridge;
@@ -96,7 +97,13 @@ if(hasWebChannelSupport) {
 		},
 		sendMessage: async (message: string) => {
 			webChannel || await getWebChannel();
-			return 'test'; // Placeholder response until backend implementation is complete
+			return new Promise((resolve) => {
+				webChannel!.objects.bridge.send_message(message, resolve);
+			});
+		},
+		messageReceived: async (callback: (message: string) => void) => {
+			webChannel || await getWebChannel();
+			webChannel!.objects.bridge.message_received.connect(callback);
 		}
 	};
 } else if (import.meta.env.DEV) {
@@ -141,6 +148,10 @@ if(hasWebChannelSupport) {
 		sendMessage: async (message: string) => {
 			console.log('Message to backend (mock):', message);
 			return '# Titolo\n\n**Grassetto**, *corsivo*, ~~barrato~~\n\n- Elemento lista\n- Altro elemento\n\n1. Primo\n2. Secondo\n\n[Link](https://example.com)\n\n`codice inline`\n\n```ts\nconst x = 1;\n```\n\n> Citazione';
+		},
+		messageReceived: async (callback: (message: string) => void) => {
+			// Mock implementation, does nothing
+			callback('This is a message received from the backend (mock).');
 		}
 	}	
 } else {
