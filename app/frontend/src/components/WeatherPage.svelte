@@ -56,14 +56,13 @@
 	import { onDestroy } from "svelte";
 	import { SvelteDate } from "svelte/reactivity";
 	import { bridge } from "../services/backend-bridge.ts";
-	import type { Metar, Taf } from "../lib/types";
+	import { weatherDataList } from "../state/weather-data-list.svelte.ts";
 
 	let localTime = new SvelteDate();
 	let timer = setInterval(() => {
 		localTime.setTime(Date.now());
 	}, 1000);
 	let icao = $state('');
-	const weatherDataList: Record<string, { metar: Metar | null; taf: Taf | null }> = $state({});
 
 	onDestroy(() => {
 		clearInterval(timer);
