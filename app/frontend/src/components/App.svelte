@@ -131,6 +131,7 @@
 		input[type='url'],
 		input[type='tel'],
 		textarea,
+		select,
 		.input-field {
 			padding: var(--space-2) var(--space-3);
 			border-radius: var(--radius-md);
@@ -147,6 +148,25 @@
 				outline: none;
 				border-color: var(--accent);
 				box-shadow: 0 0 0 2px var(--focus-ring);
+			}
+		}
+
+		select {
+			appearance: none;
+			-webkit-appearance: none;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23FFB86B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: right var(--space-3) center;
+			padding-right: calc(var(--space-3) * 2 + 12px);
+			cursor: pointer;
+
+			option {
+				background-color: var(--bg-elevated);
+				color: var(--text-secondary);
+			}
+
+			&:hover {
+				border-color: var(--border-strong);
 			}
 		}
 

@@ -8,7 +8,7 @@ def get_chat_model(temperature: float = 0.7) -> BaseChatModel:
     if not google_api_key:
         raise ValueError("Google API key not found in settings. Please set 'GOOGLE_API_KEY' in your application settings.")
     
-    google_model = str(QSettings().value('GOOGLE_MODEL', defaultValue='gemini-3.5-flash', type=str))
+    google_model = str(QSettings().value('GOOGLE_MODEL', defaultValue='', type=str))
 
     return init_chat_model(
         model=google_model,
