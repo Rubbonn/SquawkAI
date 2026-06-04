@@ -22,15 +22,13 @@
 	<div class="settings-page__item">
 		<label for="GOOGLE_MODEL">Google AI Model</label>
 		<select name="GOOGLE_MODEL" id="GOOGLE_MODEL" bind:value={settings.GOOGLE_MODEL} onchange={() => bridge.setSetting('GOOGLE_MODEL', settings.GOOGLE_MODEL)}>
-			{#await fetch('https://generativelanguage.googleapis.com/v1beta/models', { headers: { 'x-goog-api-key': settings.GOOGLE_API_KEY } }) then data}
-				{#await data.json() then data}
-					{#each data.models as model}
-						{const blacklist = ['tts', 'image', 'nano-banana', 'lyria', 'robotics', 'computer-use', 'antigravity', 'gemma', 'deep-research']}
-						{#if model.supportedGenerationMethods?.includes('generateContent') && !blacklist.some(term => model.name.toLowerCase().includes(term))}
-							<option value={model.name.split('/').pop()}>{model.displayName}</option>
-						{/if}
-					{/each}
-				{/await}
+			{#await fetchModels() then models}
+				{#each models as model}
+					{const blacklist = ['tts', 'image', 'nano-banana', 'lyria', 'robotics', 'computer-use', 'antigravity', 'gemma', 'deep-research']}
+					{#if model.supportedGenerationMethods?.includes('generateContent') && !blacklist.some(term => model.name.toLowerCase().includes(term))}
+						<option value={model.name.split('/').pop()}>{model.displayName}</option>
+					{/if}
+				{/each}
 			{/await}
 		</select>
 	</div>
@@ -39,4 +37,17 @@
 <script lang="ts">
 	import { settings } from '../state/settings.svelte.ts';
 	import { bridge } from '../services/backend-bridge.ts';
+	let models: { name: string; displayName: string; supportedGenerationMethods?: string[] }[] = $state([]);
+
+	const fetchModels = async () => {
+		if(!settings.GOOGLE_API_KEY) return [];
+		if(models.length > 0) return models; // Return cached models if already fetched
+
+		const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models', { headers: { 'x-goog-api-key': settings.GOOGLE_API_KEY } });
+		const data = await response.json();
+		const blacklist = ['tts', 'image', 'nano-banana', 'lyria', 'robotics', 'computer-use', 'antigravity', 'gemma', 'deep-research'];
+
+		models = data.models.filter((model: any) => model.supportedGenerationMethods?.includes('generateContent') && !blacklist.some((term) => model.name.toLowerCase().includes(term)));
+		return models;
+	}
 </script>
