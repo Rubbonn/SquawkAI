@@ -4,12 +4,14 @@ from PySide6.QtCore import QSettings
 from typing import Callable
 
 def get_chat_model(temperature: float = 0.7) -> BaseChatModel:
-    google_api_key = QSettings().value('GOOGLE_API_KEY', defaultValue='', type=str)
+    google_api_key = str(QSettings().value('GOOGLE_API_KEY', defaultValue='', type=str))
     if not google_api_key:
         raise ValueError("Google API key not found in settings. Please set 'GOOGLE_API_KEY' in your application settings.")
+    
+    google_model = str(QSettings().value('GOOGLE_MODEL', defaultValue='gemini-3.5-flash', type=str))
 
     return init_chat_model(
-        model='gemini-3.5-flash',
+        model=google_model,
         model_provider='google_genai',
         temperature=temperature,
         api_key=google_api_key
