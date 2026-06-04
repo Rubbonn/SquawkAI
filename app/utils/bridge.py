@@ -81,13 +81,19 @@ class Bridge(QObject):
 	def get_documents(self) -> list[dict]:
 		return document_index.documents
 	
-	@Slot(str, result=bool)
-	def send_message(self, message: str) -> bool:
+	@Slot(str, result=dict)
+	def send_message(self, message: str) -> dict[str, str | bool]:
 		agent = get_chat_agent()
-		for response in agent.stream({'messages': [HumanMessage(content=message)]}, stream_mode='updates'):
-			print(response['model']['messages'][-1].content_blocks)
-			message_blocks = response['model']['messages'][-1].content_blocks
-			for block in message_blocks:
-				if block['type'] == 'text':
-					self.message_received.emit(block['text'])
-		return True
+		try:
+			for response in agent.stream({'messages': [HumanMessage(content=message)]}, stream_mode='updates'):
+				if response.get('model') is None:
+					continue
+
+				message_blocks = response['model']['messages'][-1].content_blocks
+				for block in message_blocks:
+					if block['type'] == 'text':
+						self.message_received.emit(block['text'])
+		except Exception as e:
+			return {'error': str(e)}
+		
+		return {'error': False}

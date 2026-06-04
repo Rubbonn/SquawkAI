@@ -80,6 +80,7 @@
 	let message: string = $state('');
 	let messageHistory: { role: 'user' | 'assistant', content: string }[] = $state([]);
 	let waitingForResponse: boolean = $state(false);
+	let pendingMessages: number = 0;
 
 	const adjustTextareaHeight = () => {
 		textarea.style.height = 'auto';
@@ -91,16 +92,24 @@
 			return;
 
 		messageHistory.push({ role: 'user', content: message });
+		pendingMessages++;
 		waitingForResponse = true;
-		await bridge.sendMessage(message);
-		adjustTextareaHeight();
-		message = '';
+		const result = await bridge.sendMessage(message);
+		if(result.error) {
+			messageHistory.splice(-1, pendingMessages);
+			adjustTextareaHeight();
+			alert('Error sending message: ' + result.error);
+		} else {
+			message = '';
+		}
 		waitingForResponse = false;
+		pendingMessages = 0;
 	};
 
 	const handleMessageReceived = (newMessage: string) => {
 		const parsedMessage = marked.parse(newMessage) as string;
 		messageHistory.push({ role: 'assistant', content: parsedMessage });
+		pendingMessages++;
 		adjustTextareaHeight();
 	};
 

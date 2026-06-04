@@ -8,10 +8,10 @@ interface BackendBridge {
 	getSetting(key: string): Promise<string | null>;
 	setSetting(key: string, value: string | boolean | number): Promise<void>;
 	indexNewFiles(): Promise<{ error: string | false; }>;
-	indexNewFolder(): Promise<void>;
+	indexNewFolder(): Promise<{ error: string | false; }>;
 	getDocuments(): Promise<Document[]>;
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
-	sendMessage(message: string): Promise<string>;
+	sendMessage(message: string): Promise<{ error: string | false; }>;
 	messageReceived(callback: (message: string) => void): void;
 }
 
@@ -136,6 +136,7 @@ if(hasWebChannelSupport) {
 		indexNewFolder: async () => {
 			// Mock implementation, does nothing
 			console.log('Indexing new folder (mock)');
+			return { error: false };
 		},
 		getDocuments: async () => {
 			// Mock implementation, does nothing
@@ -147,7 +148,7 @@ if(hasWebChannelSupport) {
 		},
 		sendMessage: async (message: string) => {
 			console.log('Message to backend (mock):', message);
-			return '# Titolo\n\n**Grassetto**, *corsivo*, ~~barrato~~\n\n- Elemento lista\n- Altro elemento\n\n1. Primo\n2. Secondo\n\n[Link](https://example.com)\n\n`codice inline`\n\n```ts\nconst x = 1;\n```\n\n> Citazione';
+			return { error: false };
 		},
 		messageReceived: async (callback: (message: string) => void) => {
 			// Mock implementation, does nothing
