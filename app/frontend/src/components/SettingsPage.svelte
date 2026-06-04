@@ -16,8 +16,8 @@
 	<p class="text-small technical">Here you can configure your preferences and settings for the SquawkAI application.</p>
 
 	<div class="settings-page__item">
-		<label for="aistudio-apikey">Google AI Studio API Key</label>
-		<input name="AistudioApiKey" id="aistudio-apikey" type="text" placeholder="Enter your Google AI Studio API Key" bind:value={settings.AistudioApiKey} oninput={() => bridge.setSetting('AistudioApiKey', settings.AistudioApiKey)}/>
+		<label for="GOOGLE_API_KEY">Google AI Studio API Key</label>
+		<input name="GOOGLE_API_KEY" id="GOOGLE_API_KEY" type="text" placeholder="Enter your Google AI Studio API Key" bind:value={settings.GOOGLE_API_KEY} oninput={() => bridge.setSetting('GOOGLE_API_KEY', settings.GOOGLE_API_KEY)}/>
 	</div>
 </div>
 

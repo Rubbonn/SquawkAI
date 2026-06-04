@@ -1,11 +1,11 @@
 import { bridge } from '../services/backend-bridge';
 
 interface SettingsInterface {
-	AistudioApiKey: string;
+	GOOGLE_API_KEY: string;
 }
 
 const settings: SettingsInterface = $state({
-	AistudioApiKey: await bridge.getSetting('AistudioApiKey') || ''
+	GOOGLE_API_KEY: await bridge.getSetting('GOOGLE_API_KEY') || ''
 });
 
 export { settings, type SettingsInterface };
