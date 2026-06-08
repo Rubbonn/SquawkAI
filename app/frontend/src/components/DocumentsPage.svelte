@@ -1,13 +1,19 @@
 <style lang="scss">
 	.documents-page {
+		max-height: 100%;
+		
 		&__header {
 			margin-bottom: var(--space-3);
 		}
 
-		&__left-column, &__right-column {
-			float: left;
-			width: 50%;
-			padding: 0 var(--space-2);
+		&__content {
+			display: flex;
+			gap: var(--space-3);
+		}
+
+		&__right-column {
+			max-height: 920px;
+			overflow-y: auto;
 		}
 
 		&__upload-area {
@@ -30,49 +36,51 @@
 		<h2>Document Library</h2>
 		<p class="text-small technical">Repository of active operational documentation.</p>
 	</div>
-	<div class="documents-page__left-column">
-		<div class="documents-page__upload-area">
-			<img src="/icons/upload.png" alt="Upload Icon" width="48" height="48" />
-			<p class="text-small technical">Upload operational manuals, NOTAMs, or charts. Supported formats: PDF, DOCX, TXT.</p>
-			<button class="btn btn-primary" onclick={handleFilesClick}>Select files</button>
-			<button class="btn btn-primary" onclick={handleFoldersClick}>Select folders</button>
+	<div class="documents-page__content">
+		<div class="documents-page__left-column">
+			<div class="documents-page__upload-area">
+				<img src="/icons/upload.png" alt="Upload Icon" width="48" height="48" />
+				<p class="text-small technical">Upload operational manuals, NOTAMs, or charts. Supported formats: PDF, DOCX, TXT.</p>
+				<button class="btn btn-primary" onclick={handleFilesClick}>Select files</button>
+				<button class="btn btn-primary" onclick={handleFoldersClick}>Select folders</button>
+			</div>
 		</div>
-	</div>
-	<div class="documents-page__right-column">
-		{#if Object.keys(documentTree).length > 0}
-			{#await import("./CollapsibleCard.svelte") then { default: CollapsibleCard }}
-				{#each Object.entries(documentTree) as [nation, sections] (nation)}
-					<CollapsibleCard>
-						{#snippet header()}
-							<h3>{nation}</h3>
-						{/snippet}
-						{#each Object.entries(sections) as [section, docs] (section)}
-							<CollapsibleCard>
-								{#snippet header()}
-									<h4>{section}</h4>
-								{/snippet}
-								{#each docs as doc}
-									<CollapsibleCard>
-										{#snippet header()}
-											<h5>{doc.name}</h5>
-										{/snippet}
-										<ul>
-											<li><strong>Path:</strong> {doc.path}</li>
-											<li><strong>Nation:</strong> {doc.nation}</li>
-											<li><strong>Section:</strong> {doc.section}</li>
-											<li><strong>Section Code:</strong> {doc.section_code}</li>
-											<li><strong>AIRAC:</strong> {doc.airac}</li>
-											<li><strong>Title:</strong> {doc.title}</li>
-											<li><strong>Summary:</strong> {doc.summary}</li>
-										</ul>
-									</CollapsibleCard>
-								{/each}
-							</CollapsibleCard>
-						{/each}
-					</CollapsibleCard>
-				{/each}
-			{/await}
-		{/if}
+		<div class="documents-page__right-column">
+			{#if Object.keys(documentTree).length > 0}
+				{#await import("./CollapsibleCard.svelte") then { default: CollapsibleCard }}
+					{#each Object.entries(documentTree) as [nation, sections] (nation)}
+						<CollapsibleCard>
+							{#snippet header()}
+								<h3>{nation}</h3>
+							{/snippet}
+							{#each Object.entries(sections) as [section, docs] (section)}
+								<CollapsibleCard>
+									{#snippet header()}
+										<h4>{section}</h4>
+									{/snippet}
+									{#each docs as doc}
+										<CollapsibleCard>
+											{#snippet header()}
+												<h5>{doc.name}</h5>
+											{/snippet}
+											<ul>
+												<li><strong>Path:</strong> {doc.path}</li>
+												<li><strong>Nation:</strong> {doc.nation}</li>
+												<li><strong>Section:</strong> {doc.section}</li>
+												<li><strong>Section Code:</strong> {doc.section_code}</li>
+												<li><strong>AIRAC:</strong> {doc.airac}</li>
+												<li><strong>Title:</strong> {doc.title}</li>
+												<li><strong>Summary:</strong> {doc.summary}</li>
+											</ul>
+										</CollapsibleCard>
+									{/each}
+								</CollapsibleCard>
+							{/each}
+						</CollapsibleCard>
+					{/each}
+				{/await}
+			{/if}
+		</div>
 	</div>
 </div>
 

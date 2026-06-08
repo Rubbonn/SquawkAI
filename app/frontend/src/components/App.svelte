@@ -46,11 +46,21 @@
 
 			--transition-fast: 120ms ease;
 			--transition-normal: 180ms ease;
+
+			--app-width: 1280px;
+			--app-height: 1024px;
+		}
+
+		* {
+			scrollbar-width: none;
+			&::-webkit-scrollbar {
+				width: 0;
+			}
 		}
 
 		#app {
-			width: 1280px;
-			height: 1024px;
+			width: var(--app-width);
+			height: var(--app-height);
 			color: var(--text-primary);
 			font-family: 'Inter', sans-serif;
 			font-size: 1rem;

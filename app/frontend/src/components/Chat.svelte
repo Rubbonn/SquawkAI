@@ -11,10 +11,6 @@
 			overflow-y: scroll;
 			margin: 0 calc(-1 * var(--space-3));
 			padding: 0 var(--space-3);
-
-			&::-webkit-scrollbar {
-				width: 0;
-			}
 		}
 
 		&__message {
