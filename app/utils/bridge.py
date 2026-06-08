@@ -67,6 +67,14 @@ class Bridge(QObject):
 
 		return result
 	
+	@Slot(str, result=dict)
+	def remove_document(self, name: str) -> dict[str, str | bool]:
+		try:
+			document_index.remove_document(name)
+			return {'error': False}
+		except Exception as e:
+			return {'error': str(e)}
+	
 	@Slot(result=list)
 	def get_documents(self) -> list[dict]:
 		return document_index.documents

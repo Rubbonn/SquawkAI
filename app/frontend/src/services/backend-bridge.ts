@@ -9,6 +9,7 @@ interface BackendBridge {
 	setSetting(key: string, value: string | boolean | number): Promise<void>;
 	indexNewFiles(): Promise<{ error: string | false; }>;
 	indexNewFolder(): Promise<{ error: string | false; }>;
+	removeDocument(name: string): Promise<{ error: string | false; }>;
 	getDocuments(): Promise<Document[]>;
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
 	sendMessage(message: string): Promise<{ error: string | false; }>;
@@ -86,6 +87,19 @@ if(hasWebChannelSupport) {
 				webChannel!.objects.bridge.index_new_folder(resolve);
 			});
 		},
+		removeDocument: async (name: string) => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve, reject) => {
+				webChannel!.objects.bridge.remove_document(name, (response: { error: string | false }) => {
+					if (response.error) {
+						reject(new Error(`Failed to remove document: ${response.error}`));
+						return;
+					}
+					
+					resolve({ error: false });
+				});
+			});
+		},
 		getDocuments: async () => {
 			webChannel || await getWebChannel();
 			return new Promise((resolve) => {
@@ -141,6 +155,11 @@ if(hasWebChannelSupport) {
 		indexNewFolder: async () => {
 			// Mock implementation, does nothing
 			console.log('Indexing new folder (mock)');
+			return { error: false };
+		},
+		removeDocument: async (name: string) => {
+			// Mock implementation, does nothing
+			console.log(`Removing document "${name}" (mock)`);
 			return { error: false };
 		},
 		getDocuments: async () => {
