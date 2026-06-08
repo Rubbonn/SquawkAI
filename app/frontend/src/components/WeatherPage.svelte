@@ -38,8 +38,8 @@
 		<p class="weather-page__subtitle technical">ZULU: {`${String(localTime.getUTCHours()).padStart(2, '0')}:${String(localTime.getUTCMinutes()).padStart(2, '0')}:${String(localTime.getUTCSeconds()).padStart(2, '0')}`} | LCL: {`${String(localTime.getHours()).padStart(2, '0')}:${String(localTime.getMinutes()).padStart(2, '0')}:${String(localTime.getSeconds()).padStart(2, '0')}`}</p>
 	</div>
 	<div class="weather-page__search">
-		<input type="text" name="icao" placeholder="STATION WEATHER LOOKUP (E.G. KJFK)" class="weather-page__input-search input-field technical" bind:value={icao}>
-		<button type="button" class="weather-page__search-button btn-primary" onclick={() => fetchWeather(icao)}>LOOKUP</button>
+		<input type="text" name="icao" placeholder="STATION WEATHER LOOKUP (E.G. KJFK)" class="weather-page__input-search input-field technical" bind:value={icao} disabled={fetchingWeather} onkeydown={(e) => { if (e.key === 'Enter') fetchWeather(icao); }} />
+		<button type="button" class="weather-page__search-button btn-primary" onclick={() => fetchWeather(icao)} disabled={fetchingWeather}>{#if fetchingWeather}<img src="/icons/compass-regular__accent-on.svg" class="spin" alt="Loading..." width="15" height="15"/>{:else}LOOKUP{/if}</button>
 	</div>
 	<div class="weather-page__list">
 	{#if Object.keys(weatherDataList).length > 0}
@@ -63,6 +63,7 @@
 		localTime.setTime(Date.now());
 	}, 1000);
 	let icao = $state('');
+	let fetchingWeather = $state(false);
 
 	onDestroy(() => {
 		clearInterval(timer);
@@ -72,11 +73,14 @@
 		try {
 			if (!icao) return;
 			icao = icao.toUpperCase();
+			fetchingWeather = true;
 			const weatherData = await bridge.getAirportWeather(icao);
+			fetchingWeather = false;
 			if(!weatherData.metar && !weatherData.taf) return;
 			weatherDataList[icao] = weatherData;
 		} catch (error) {
-			console.error("Error fetching weather data:", error);
+			fetchingWeather = false;
+			console.error(`Error fetching weather data for ${icao}:`, error);
 			alert(`Error fetching weather data for ${icao}: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	};

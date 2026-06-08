@@ -87,6 +87,14 @@
 				background-color: var(--bg-elevated);
 				border-color: var(--border-default);
 				cursor: pointer;
+
+				&:disabled {
+					cursor: not-allowed;
+				}
+			}
+
+			&:disabled {
+				cursor: not-allowed;
 			}
 		}
 
@@ -148,6 +156,10 @@
 				outline: none;
 				border-color: var(--accent);
 				box-shadow: 0 0 0 2px var(--focus-ring);
+			}
+
+			&:disabled {
+				cursor: not-allowed;
 			}
 		}
 
