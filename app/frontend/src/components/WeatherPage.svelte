@@ -77,6 +77,7 @@
 			weatherDataList[icao] = weatherData;
 		} catch (error) {
 			console.error("Error fetching weather data:", error);
+			alert(`Error fetching weather data for ${icao}: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	};
 </script>

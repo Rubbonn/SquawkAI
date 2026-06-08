@@ -1,6 +1,7 @@
 from app.utils.documents import document_index
 from app.utils.llm import get_chat_agent
-from langchain.messages import AIMessage, HumanMessage
+from app.utils.tools import get_airport_weather
+from langchain.messages import HumanMessage
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal, QSettings
 from uuid import uuid4
@@ -17,21 +18,7 @@ class Bridge(QObject):
 
 	@Slot(str, result=dict)
 	def get_airport_weather(self, icao: str) -> dict:
-		import httpx
-		try:
-			response = httpx.get('https://aviationweather.gov/api/data/metar', params={'ids': icao, 'format': 'json'}, headers={'User-Agent': 'SquawkAI/1.0'})
-			response.raise_for_status()
-			metar = response.json() if response.status_code == httpx.codes.OK else None
-			response = httpx.get('https://aviationweather.gov/api/data/taf', params={'ids': icao, 'format': 'json'}, headers={'User-Agent': 'SquawkAI/1.0'})
-			response.raise_for_status()
-			taf = response.json() if response.status_code == httpx.codes.OK else None
-		except httpx.HTTPError as e:
-			return {'error': f'HTTP error occurred: {e}'}
-		
-		return {
-			'metar': metar,
-			'taf': taf
-		}
+		return get_airport_weather(icao)
 	
 	@Slot(str, result=str)
 	def get_setting(self, key: str) -> str:
@@ -85,7 +72,7 @@ class Bridge(QObject):
 	
 	@Slot(str, result=dict)
 	def send_message(self, message: str) -> dict[str, str | bool]:
-		agent = get_chat_agent()
+		agent = get_chat_agent(tools=[get_airport_weather])
 		thread_config = {"configurable": {"thread_id": self._thread_id}}
 		try:
 			for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=thread_config, stream_mode='updates'):

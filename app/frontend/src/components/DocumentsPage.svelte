@@ -78,7 +78,7 @@
 
 <script lang="ts">
 	import { bridge } from '../services/backend-bridge';
-	import { documentIndex } from '../state/document-index.svelte';
+	import { documentIndex, type Document } from '../state/document-index.svelte';
 
 	const handleFilesClick = async () => {
 		try {

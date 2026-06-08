@@ -116,9 +116,9 @@ if(hasWebChannelSupport) {
 	bridge = {
 		getAirportWeather: async (icaoId: string) => {
 			// Return mock data
-			let response = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://aviationweather.gov/api/data/metar?ids=' + icaoId + '&format=json'));
+			let response = await fetch('https://api.cors.lol/?url=' + encodeURIComponent('https://aviationweather.gov/api/data/metar?ids=' + icaoId + '&format=json'));
 			let metar = await response.json();
-			response = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://aviationweather.gov/api/data/taf?ids=' + icaoId + '&format=json'));
+			response = await fetch('https://api.cors.lol/?url=' + encodeURIComponent('https://aviationweather.gov/api/data/taf?ids=' + icaoId + '&format=json'));
 			let taf = await response.json();
 			return {
 				metar: metar && metar[0],
