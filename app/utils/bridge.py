@@ -1,6 +1,6 @@
 from app.utils.documents import document_index
 from app.utils.llm import get_chat_agent
-from app.utils.tools import get_airport_weather
+from app.utils.tools import get_airport_weather, get_available_documents, get_document
 from langchain_core.runnables.config import RunnableConfig
 from langchain.messages import HumanMessage
 from pathlib import Path
@@ -73,7 +73,7 @@ class Bridge(QObject):
 	
 	@Slot(str, result=dict)
 	def send_message(self, message: str) -> dict[str, str | bool]:
-		agent = get_chat_agent(tools=[get_airport_weather])
+		agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document])
 		thread_config = {"thread_id": self._thread_id}
 		try:
 			for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=RunnableConfig(configurable=thread_config), stream_mode='updates'):

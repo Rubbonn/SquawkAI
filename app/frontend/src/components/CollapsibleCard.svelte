@@ -2,6 +2,10 @@
 	.collapsible-card {
 		padding: var(--space-2);
 
+		&:not(:last-child) {
+			margin-bottom: var(--space-2);
+		}
+
 		&__header {
 			display: flex;
 			justify-content: space-between;
@@ -48,6 +52,7 @@
 </div>
 
 <script lang="ts">
+	import { type Snippet } from 'svelte';
 	const { header, children }: { header: Snippet; children: Snippet} = $props();
 	let collapsed = $state(false);
 </script>
