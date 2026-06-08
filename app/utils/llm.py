@@ -1,7 +1,10 @@
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model, BaseChatModel
+from langgraph.checkpoint.memory import InMemorySaver
 from PySide6.QtCore import QSettings
 from typing import Callable
+
+_checkpointer = InMemorySaver()
 
 def get_chat_model(temperature: float = 0.7) -> BaseChatModel:
     google_api_key = str(QSettings().value('GOOGLE_API_KEY', defaultValue='', type=str))
@@ -21,4 +24,5 @@ def get_chat_agent(temperature: float = 0.7, tools: list[Callable] = []):
     return create_agent(
         model=get_chat_model(temperature=temperature),
         tools=tools,
+        checkpointer=_checkpointer
     )

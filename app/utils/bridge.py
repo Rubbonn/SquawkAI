@@ -3,6 +3,7 @@ from app.utils.llm import get_chat_agent
 from langchain.messages import AIMessage, HumanMessage
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal, QSettings
+from uuid import uuid4
 
 class Bridge(QObject):
 	document_index_updated = Signal(list)
@@ -10,6 +11,7 @@ class Bridge(QObject):
 
 	def __init__(self):
 		super().__init__()
+		self._thread_id = str(uuid4())
 		document_index.document_added.connect(lambda: self.document_index_updated.emit(document_index.documents))
 		document_index.document_removed.connect(lambda: self.document_index_updated.emit(document_index.documents))
 
@@ -84,8 +86,9 @@ class Bridge(QObject):
 	@Slot(str, result=dict)
 	def send_message(self, message: str) -> dict[str, str | bool]:
 		agent = get_chat_agent()
+		thread_config = {"configurable": {"thread_id": self._thread_id}}
 		try:
-			for response in agent.stream({'messages': [HumanMessage(content=message)]}, stream_mode='updates'):
+			for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=thread_config, stream_mode='updates'):
 				if response.get('model') is None:
 					continue
 
@@ -97,3 +100,7 @@ class Bridge(QObject):
 			return {'error': str(e)}
 		
 		return {'error': False}
+	
+	@Slot()
+	def new_thread(self) -> None:
+		self._thread_id = str(uuid4())

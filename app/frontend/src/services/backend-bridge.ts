@@ -13,6 +13,7 @@ interface BackendBridge {
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
 	sendMessage(message: string): Promise<{ error: string | false; }>;
 	messageReceived(callback: (message: string) => void): void;
+	newThread(): void;
 }
 
 let bridge: BackendBridge;
@@ -104,6 +105,10 @@ if(hasWebChannelSupport) {
 		messageReceived: async (callback: (message: string) => void) => {
 			webChannel || await getWebChannel();
 			webChannel!.objects.bridge.message_received.connect(callback);
+		},
+		newThread: async () => {
+			webChannel || await getWebChannel();
+			webChannel!.objects.bridge.new_thread();
 		}
 	};
 } else if (import.meta.env.DEV) {
@@ -153,6 +158,9 @@ if(hasWebChannelSupport) {
 		messageReceived: async (callback: (message: string) => void) => {
 			// Mock implementation, does nothing
 			callback('This is a message received from the backend (mock).');
+		},
+		newThread: async () => {
+			console.log('New thread created (mock)');
 		}
 	}	
 } else {

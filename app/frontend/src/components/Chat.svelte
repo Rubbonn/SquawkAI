@@ -60,7 +60,7 @@
 {/snippet}
 
 <div class="chat h-100">
-	<button class="btn btn-primary w-100">New Chat</button>
+	<button class="btn btn-primary w-100" onclick={newChatHandler}>New Chat</button>
 	<div class="chat__history h-100">
 		{#each messageHistory as { role, content }}
 			{@render renderMessage(role, content)}
@@ -114,4 +114,10 @@
 	};
 
 	bridge.messageReceived(handleMessageReceived);
+
+	const newChatHandler = async () => {
+		await bridge.newThread();
+		messageHistory = [];
+		adjustTextareaHeight();
+	}
 </script>
