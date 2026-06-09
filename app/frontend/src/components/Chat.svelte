@@ -64,9 +64,11 @@
 		<div class="chat__loader" class:d-none={!waitingForResponse}><img src="/icons/compass-regular__text-primary.svg" class="spin" alt="Loading..." width="64" height="64"/></div>
 	</div>
 	<div class="chat__input">
-		<textarea rows="1" class="w-100" name="message" placeholder="Type your message..." bind:this={textarea} oninput={adjustTextareaHeight} bind:value={message} disabled={waitingForResponse}></textarea>
+		<textarea rows="1" class="w-100" name="message" placeholder="Type your message..." bind:this={textarea} oninput={adjustTextareaHeight} bind:value={message} disabled={waitingForResponse} onkeydown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}></textarea>
 		<button class="btn btn-secondary text-small" onclick={sendMessage} disabled={waitingForResponse}>Send</button>
+		
 	</div>
+	<p class="text-small technical">Press Shift + Enter for a new line</p>
 </div>
 
 <script lang="ts">
