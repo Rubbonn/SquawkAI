@@ -92,7 +92,7 @@ if(hasWebChannelSupport) {
 			return new Promise((resolve, reject) => {
 				webChannel!.objects.bridge.remove_document(name, (response: { error: string | false }) => {
 					if (response.error) {
-						reject(new Error(`Failed to remove document: ${response.error}`));
+						reject(new Error(`Backend error: ${response.error}`));
 						return;
 					}
 					

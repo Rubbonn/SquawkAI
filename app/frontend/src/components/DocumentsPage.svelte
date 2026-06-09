@@ -73,6 +73,8 @@
 												<li><strong>Title:</strong> {doc.title}</li>
 												<li><strong>Summary:</strong> {doc.summary}</li>
 											</ul>
+											<hr/>
+											<button class="btn btn-invisible text-danger" onclick={() => handleRemoveDocument(doc.name)}><img class="d-inline-block" src="/icons/trash-can-solid__text-danger.svg" alt="Remove Document Icon" width="16" height="16" /> Remove Document</button>
 										</CollapsibleCard>
 									{/each}
 								</CollapsibleCard>
@@ -120,6 +122,26 @@
 			alert('Failed to index folder. Please try again.');
 		}
 	};
+
+	const handleRemoveDocument = async (doc: string) => {
+		if(!confirm(`Are you sure you want to remove the document "${doc}"? This action cannot be undone.`)) {
+			return;
+		}
+		
+		try {
+			const result = await bridge.removeDocument(doc);
+			if(result.error) {
+				console.error('Error removing document:', result.error);
+				alert(`Failed to remove document. Details: ${result.error}`);
+				return;
+			}
+
+			alert('Document removed successfully!');
+		} catch (error) {
+			console.error('Error removing document:', error);
+			alert('Failed to remove document. Please try again.');
+		}
+	}
 
 	let documentTree: { [nation: string]: { [section: string]: Document[] } } = $derived.by(() => {
 		const tree: { [nation: string]: { [section: string]: Document[] } } = {};

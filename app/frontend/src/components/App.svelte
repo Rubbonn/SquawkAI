@@ -33,6 +33,7 @@
 			--focus-ring: rgba(255, 184, 107, 0.45);
 
 			--status-error: #FFB4AB;
+			--status-error-on: #FF513E;
 
 			--space-1: 4px;
 			--space-2: 8px;
@@ -156,6 +157,35 @@
 			}
 		}
 
+		.btn-danger {
+			background-color: var(--status-error);
+			color: var(--accent-on);
+			border-color: var(--accent-on);
+
+			&:hover {
+				background-color: var(--status-error-on);
+				border-color: var(--status-error-on);
+				cursor: pointer;
+			}
+
+			&:focus-visible {
+				outline: none;
+				box-shadow: 0 0 0 2px var(--focus-ring);
+			}
+		}
+
+		.btn-invisible {
+			border-radius: initial;
+			padding: 0;
+			border: none;
+
+			&:hover {
+				background-color: initial;
+				border: none;
+				text-decoration: underline;
+			}
+		}
+
 		input[type='text'],
 		input[type='search'],
 		input[type='email'],
@@ -204,6 +234,13 @@
 			&:hover {
 				border-color: var(--border-strong);
 			}
+		}
+
+		hr {
+			border: none;
+			border-top: 1px solid var(--border-default);
+			margin: var(--space-2) 0;
+			width: 100%;
 		}
 
 		.ui-card {
@@ -256,6 +293,10 @@
 			text-align: center;
 		}
 
+		.text-danger {
+			color: var(--status-error);
+		}
+
 		.w-100 {
 			width: 100%;
 		}
@@ -270,6 +311,10 @@
 
 		.d-block {
 			display: block !important;
+		}
+
+		.d-inline-block {
+			display: inline-block !important;
 		}
 
 		@keyframes spin {
