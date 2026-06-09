@@ -18,6 +18,7 @@
 	import maplibregl from "maplibre-gl";
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from "svelte";
+	import { bridge } from "../services/backend-bridge.ts";
 
 	let mapContainer: HTMLDivElement;
 	let map: maplibregl.Map;
@@ -67,5 +68,19 @@
 		return () => {
 			map.remove();
 		}
+	});
+
+	bridge.newMapMarker((latitude, longitude, name = '', panTo = false) => {
+		const popup = new maplibregl.Popup({ offset: 25 });
+		if(name)
+			popup.setText(name);
+
+		new maplibregl.Marker()
+			.setLngLat([longitude, latitude])
+			.setPopup(popup)
+			.addTo(map);
+			
+		if(panTo)
+			map.flyTo({ center: [longitude, latitude], zoom: 10 });
 	});
 </script>

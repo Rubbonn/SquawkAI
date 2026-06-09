@@ -34,8 +34,7 @@ if __name__ == "__main__":
 		dev_tools.show()
 
 	channel = QWebChannel()
-	from app.utils.bridge import Bridge
-	bridge = Bridge()
+	from app.utils.bridge import bridge
 	channel.registerObject('bridge', bridge)
 	browser.page().setWebChannel(channel)
 
