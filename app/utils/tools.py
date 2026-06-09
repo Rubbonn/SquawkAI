@@ -56,14 +56,13 @@ def get_document(name: str, runtime: ToolRuntime) -> ToolMessage | None:
 		FileContentBlock(type='file', base64=standard_b64encode(doc_content).decode(), mime_type='application/pdf')
 	], tool_call_id=runtime.tool_call_id)
 
-def add_map_marker(latitude: float, longitude: float, name: str = '', panTo: bool = False) -> None:
+def add_map_marker(latitude: float, longitude: float, name: str = '') -> None:
 	'''Add a map marker with the given name and coordinates to the frontend map component.
 
 	Args:
 		latitude (float): The latitude coordinate of the marker.
 		longitude (float): The longitude coordinate of the marker.
 		name (str): The name or label for the map marker if provided. Default is an empty string.
-		panTo (bool): Whether to pan the map to the marker's location. Default is False.
 	'''
 	from app.utils.bridge import bridge
-	bridge.new_map_marker.emit(latitude, longitude, name, panTo)
+	bridge.new_map_marker.emit(latitude, longitude, name)

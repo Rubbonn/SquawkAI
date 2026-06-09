@@ -15,7 +15,7 @@ interface BackendBridge {
 	sendMessage(message: string): Promise<void>;
 	messageReceived(callback: (message: string) => void): void;
 	newThread(): Promise<void>;
-	newMapMarker(callback: (latitude: number, longitude: number, name: string, panTo: boolean) => void): void;
+	newMapMarker(callback: (latitude: number, longitude: number, name: string) => void): void;
 }
 
 let bridge: BackendBridge;
@@ -172,7 +172,7 @@ if(hasWebChannelSupport) {
 				}
 			});
 		},
-		newMapMarker: async (callback: (latitude: number, longitude: number, name: string, panTo: boolean) => void) => {
+		newMapMarker: async (callback: (latitude: number, longitude: number, name: string) => void) => {
 			webChannel || await getWebChannel();
 			webChannel!.objects.bridge.new_map_marker.connect(callback);
 		}
@@ -233,7 +233,7 @@ if(hasWebChannelSupport) {
 		newThread: async () => {
 			console.log('New thread created (mock)');
 		},
-		newMapMarker: async (callback: (latitude: number, longitude: number, name: string, panTo: boolean) => void) => {
+		newMapMarker: async (callback: (latitude: number, longitude: number, name: string) => void) => {
 			// Mock implementation, does nothing
 		}
 	}	

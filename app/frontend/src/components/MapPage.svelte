@@ -15,10 +15,10 @@
 </div>
 
 <script lang="ts">
-	import maplibregl from "maplibre-gl";
+	import maplibregl from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
-	import { onMount } from "svelte";
-	import { bridge } from "../services/backend-bridge.ts";
+	import { onMount } from 'svelte';
+	import { markers } from '../state/map-elements.svelte.ts';
 
 	let mapContainer: HTMLDivElement;
 	let map: maplibregl.Map;
@@ -70,17 +70,9 @@
 		}
 	});
 
-	bridge.newMapMarker((latitude, longitude, name = '', panTo = false) => {
-		const popup = new maplibregl.Popup({ offset: 25 });
-		if(name)
-			popup.setText(name);
-
-		new maplibregl.Marker()
-			.setLngLat([longitude, latitude])
-			.setPopup(popup)
-			.addTo(map);
-			
-		if(panTo)
-			map.flyTo({ center: [longitude, latitude], zoom: 10 });
+	$effect(() => {
+		for(const marker of markers) {
+			marker.addTo(map);
+		}
 	});
 </script>

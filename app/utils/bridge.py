@@ -10,7 +10,7 @@ from uuid import uuid4
 class Bridge(QObject):
 	document_index_updated = Signal(list)
 	message_received = Signal(str)
-	new_map_marker = Signal(float, float, str, bool)
+	new_map_marker = Signal(float, float, str)
 
 	def __init__(self):
 		super().__init__()
