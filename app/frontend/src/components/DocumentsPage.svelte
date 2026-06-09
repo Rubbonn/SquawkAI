@@ -14,6 +14,7 @@
 		&__right-column {
 			max-height: 920px;
 			overflow-y: auto;
+			padding: 0 var(--space-1);
 		}
 
 		&__upload-area {

@@ -52,9 +52,23 @@
 		}
 
 		* {
-			scrollbar-width: none;
+			scrollbar-gutter: stable;
 			&::-webkit-scrollbar {
-				width: 0;
+				width: var(--space-2);
+			}
+
+			&::-webkit-scrollbar-track {
+				border-radius: 9999px;
+				background-color: var(--bg-surface);
+				border: 1px solid var(--border-default);
+				margin: var(--space-1) 0;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				border-radius: 9999px;
+				background-color: var(--text-muted);
+				background-clip: content-box;
+				border: 3px solid transparent;
 			}
 		}
 

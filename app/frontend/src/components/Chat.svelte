@@ -8,7 +8,7 @@
 			display: flex;
 			flex-direction: column;
 			gap: var(--space-2);
-			overflow-y: scroll;
+			overflow-y: auto;
 			margin: 0 calc(-1 * var(--space-3));
 			padding: 0 var(--space-3);
 		}
