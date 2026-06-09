@@ -90,14 +90,14 @@
 		messageHistory.push({ role: 'user', content: message });
 		pendingMessages++;
 		waitingForResponse = true;
-		const result = await bridge.sendMessage(message);
-		if(result.error) {
+		try {
+			await bridge.sendMessage(message);
+		} catch(error) {
 			messageHistory.splice(-1, pendingMessages);
 			adjustTextareaHeight();
-			alert('Error sending message: ' + result.error);
-		} else {
-			message = '';
+			alert(`Error sending message: ${error instanceof Error ? error.message : String(error)}`);
 		}
+		message = '';
 		waitingForResponse = false;
 		pendingMessages = 0;
 	};

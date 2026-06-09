@@ -93,33 +93,19 @@
 
 	const handleFilesClick = async () => {
 		try {
-			let results = await bridge.indexNewFiles();
-			if(results.error) {
-				console.error('Error indexing files:', results.error);
-				alert(`Failed to index some files. Details: ${results.error}`);
-				return;
-			}
-
+			await bridge.indexNewFiles();
 			alert('Files indexed successfully!');
 		} catch (error) {
-			console.error('Error indexing files:', error);
-			alert('Failed to index files. Please try again.');
+			alert(`Failed to index files. Details: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	};
 
 	const handleFoldersClick = async () => {
 		try {
-			let results =await bridge.indexNewFolder();
-			if(results.error) {
-				console.error('Error indexing folder:', results.error);
-				alert(`Failed to index folder. Details: ${results.error}`);
-				return;
-			}
-
+			await bridge.indexNewFolder();
 			alert('Folder indexed successfully!');
 		} catch (error) {
-			console.error('Error indexing folder:', error);
-			alert('Failed to index folder. Please try again.');
+			alert(`Failed to index folder. Details: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	};
 
@@ -129,17 +115,10 @@
 		}
 		
 		try {
-			const result = await bridge.removeDocument(doc);
-			if(result.error) {
-				console.error('Error removing document:', result.error);
-				alert(`Failed to remove document. Details: ${result.error}`);
-				return;
-			}
-
+			await bridge.removeDocument(doc);
 			alert('Document removed successfully!');
 		} catch (error) {
-			console.error('Error removing document:', error);
-			alert('Failed to remove document. Please try again.');
+			alert(`Failed to remove document. Details: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	}
 

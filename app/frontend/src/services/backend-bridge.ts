@@ -7,14 +7,14 @@ interface BackendBridge {
 	getAirportWeather(icaoId: string): Promise<{ metar: Metar | null; taf: Taf | null }>;
 	getSetting(key: string): Promise<string | null>;
 	setSetting(key: string, value: string | boolean | number): Promise<void>;
-	indexNewFiles(): Promise<{ error: string | false; }>;
-	indexNewFolder(): Promise<{ error: string | false; }>;
-	removeDocument(name: string): Promise<{ error: string | false; }>;
+	indexNewFiles(): Promise<void>;
+	indexNewFolder(): Promise<void>;
+	removeDocument(name: string): Promise<void>;
 	getDocuments(): Promise<Document[]>;
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
-	sendMessage(message: string): Promise<{ error: string | false; }>;
+	sendMessage(message: string): Promise<void>;
 	messageReceived(callback: (message: string) => void): void;
-	newThread(): void;
+	newThread(): Promise<void>;
 	newMapMarker(callback: (latitude: number, longitude: number, name: string, panTo: boolean) => void): void;
 }
 
@@ -62,7 +62,7 @@ if(hasWebChannelSupport) {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
 				webChannel!.objects.bridge.get_setting(key, (result: string | null) => {
-					if (result === null) {
+					if(result === null) {
 						reject(new Error(`Setting with key "${key}" not found`));
 					} else {
 						resolve(result);
@@ -78,33 +78,63 @@ if(hasWebChannelSupport) {
 		},
 		indexNewFiles: async () => {
 			webChannel || await getWebChannel();
-			return new Promise((resolve) => {
-				webChannel!.objects.bridge.index_new_files(resolve);
+			return new Promise((resolve, reject) => {
+				try {
+					webChannel!.objects.bridge.index_new_files((response: { error: string | false }) => {
+						if(response.error) {
+							reject(new Error(`Backend error: ${response.error}`));
+							return;
+						}
+
+						resolve();
+					});
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
 			});
 		},
 		indexNewFolder: async () => {
 			webChannel || await getWebChannel();
-			return new Promise((resolve) => {
-				webChannel!.objects.bridge.index_new_folder(resolve);
+			return new Promise((resolve, reject) => {
+				try {
+					webChannel!.objects.bridge.index_new_folder((response: { error: string | false }) => {
+						if(response.error) {
+							reject(new Error(`Backend error: ${response.error}`));
+							return;
+						}
+
+						resolve();
+					});
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
 			});
 		},
 		removeDocument: async (name: string) => {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
-				webChannel!.objects.bridge.remove_document(name, (response: { error: string | false }) => {
-					if (response.error) {
-						reject(new Error(`Backend error: ${response.error}`));
-						return;
-					}
-					
-					resolve({ error: false });
-				});
+				try {
+					webChannel!.objects.bridge.remove_document(name, (response: { error: string | false }) => {
+						if(response.error) {
+							reject(new Error(`Backend error: ${response.error}`));
+							return;
+						}
+
+						resolve();
+					});
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
 			});
 		},
 		getDocuments: async () => {
 			webChannel || await getWebChannel();
-			return new Promise((resolve) => {
-				webChannel!.objects.bridge.get_documents(resolve);
+			return new Promise((resolve, reject) => {
+				try {
+					webChannel!.objects.bridge.get_documents(resolve);
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
 			});
 		},
 		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
@@ -113,8 +143,19 @@ if(hasWebChannelSupport) {
 		},
 		sendMessage: async (message: string) => {
 			webChannel || await getWebChannel();
-			return new Promise((resolve) => {
-				webChannel!.objects.bridge.send_message(message, resolve);
+			return new Promise((resolve, reject) => {
+				try {
+					webChannel!.objects.bridge.send_message(message, (response: { error: string | false }) => {
+						if(response.error) {
+							reject(new Error(`Backend error: ${response.error}`));
+							return;
+						}
+
+						resolve();
+					});
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
 			});
 		},
 		messageReceived: async (callback: (message: string) => void) => {
@@ -123,7 +164,13 @@ if(hasWebChannelSupport) {
 		},
 		newThread: async () => {
 			webChannel || await getWebChannel();
-			webChannel!.objects.bridge.new_thread();
+			return new Promise((resolve, reject) => {
+				try {
+					webChannel!.objects.bridge.new_thread(resolve);
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
+			});
 		},
 		newMapMarker: async (callback: (latitude: number, longitude: number, name: string, panTo: boolean) => void) => {
 			webChannel || await getWebChannel();
@@ -155,17 +202,14 @@ if(hasWebChannelSupport) {
 		indexNewFiles: async () => {
 			// Mock implementation, does nothing
 			console.log('Indexing new files (mock)');
-			return { error: false };
 		},
 		indexNewFolder: async () => {
 			// Mock implementation, does nothing
 			console.log('Indexing new folder (mock)');
-			return { error: false };
 		},
 		removeDocument: async (name: string) => {
 			// Mock implementation, does nothing
 			console.log(`Removing document "${name}" (mock)`);
-			return { error: false };
 		},
 		getDocuments: async () => {
 			// Mock implementation, does nothing
@@ -181,7 +225,6 @@ if(hasWebChannelSupport) {
 		},
 		sendMessage: async (message: string) => {
 			console.log('Message to backend (mock):', message);
-			return { error: false };
 		},
 		messageReceived: async (callback: (message: string) => void) => {
 			// Mock implementation, does nothing
