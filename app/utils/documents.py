@@ -1,5 +1,5 @@
 from app.utils.models import Document
-from app.utils.llm import get_chat_model
+from app.llm.llm import get_chat_model
 from base64 import standard_b64encode
 from langchain.messages import HumanMessage, TextContentBlock, FileContentBlock
 from pathlib import Path

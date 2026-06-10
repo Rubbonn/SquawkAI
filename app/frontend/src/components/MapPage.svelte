@@ -18,10 +18,11 @@
 	import maplibregl from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
-	import { markers } from '../state/map-elements.svelte.ts';
+	import { mapState } from '../state/map-elements.svelte.ts';
 
 	let mapContainer: HTMLDivElement;
 	let map: maplibregl.Map;
+	const addedMarkers: maplibregl.Marker[] = [];
 
 	onMount(() => {
 		map = new maplibregl.Map({
@@ -71,8 +72,18 @@
 	});
 
 	$effect(() => {
-		for(const marker of markers) {
-			marker.addTo(map);
+		for(const marker of addedMarkers) {
+			marker.remove();
+		}
+
+		for(const marker of mapState.points) {
+			const popup = new maplibregl.Popup({ offset: 25 });
+			if(marker.name)
+				popup.setText(marker.name);
+
+			addedMarkers.push(new maplibregl.Marker()
+				.setLngLat([marker.lng, marker.lat])
+				.setPopup(popup).addTo(map));
 		}
 	});
 </script>

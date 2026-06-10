@@ -1,17 +1,11 @@
 import { bridge } from '../services/backend-bridge.ts';
-import maplibregl from 'maplibre-gl';
+import { type MapState } from '../lib/types';
 
-const markers: maplibregl.Marker[] = $state([]);
-const polylines: { lat: number, lng: number }[][] = $state([]);
+const mapState: MapState = $state({ points: [], lines: [] });
 
-bridge.newMapMarker((latitude, longitude, name = '') => {
-	const popup = new maplibregl.Popup({ offset: 25 });
-	if(name)
-		popup.setText(name);
-
-	markers.push(new maplibregl.Marker()
-		.setLngLat([longitude, latitude])
-		.setPopup(popup));
+bridge.mapStateUpdated((state: MapState) => {
+	mapState.points = state.points;
+	mapState.lines = state.lines;
 });
 
-export { markers, polylines };
+export { mapState };

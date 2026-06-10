@@ -1,5 +1,5 @@
 import { QWebChannel, type QWebChannelTransport, type QWebChannelInstance } from "../lib/qwebchannel.js";
-import type { Metar, Taf } from "../lib/types";
+import type { Metar, Taf, MapState } from "../lib/types";
 import type { Document } from "../state/document-index.svelte";
 declare const qt: { webChannelTransport: unknown } | undefined;
 
@@ -15,7 +15,7 @@ interface BackendBridge {
 	sendMessage(message: string): Promise<void>;
 	messageReceived(callback: (message: string) => void): void;
 	newThread(): Promise<void>;
-	newMapMarker(callback: (latitude: number, longitude: number, name: string) => void): void;
+	mapStateUpdated(callback: (state: MapState) => void): void;
 }
 
 let bridge: BackendBridge;
@@ -172,9 +172,9 @@ if(hasWebChannelSupport) {
 				}
 			});
 		},
-		newMapMarker: async (callback: (latitude: number, longitude: number, name: string) => void) => {
+		mapStateUpdated: async (callback: (state: MapState) => void) => {
 			webChannel || await getWebChannel();
-			webChannel!.objects.bridge.new_map_marker.connect(callback);
+			webChannel!.objects.bridge.map_state_updated.connect(callback);
 		}
 	};
 } else if (import.meta.env.DEV) {
@@ -233,7 +233,7 @@ if(hasWebChannelSupport) {
 		newThread: async () => {
 			console.log('New thread created (mock)');
 		},
-		newMapMarker: async (callback: (latitude: number, longitude: number, name: string) => void) => {
+		mapStateUpdated: async (callback: (state: MapState) => void) => {
 			// Mock implementation, does nothing
 		}
 	}	
