@@ -58,51 +58,52 @@ def get_document(name: str, runtime: ToolRuntime) -> ToolMessage | None:
 	], tool_call_id=runtime.tool_call_id)
 
 def set_map_state(state: MapState, update: bool = True) -> None:
-	"""Update the state of the map with the given state. Use it to add markers or routes to the map.
+	"""Update the map state with new points and lines. If update is True, the new state will be merged with the existing state, adding only missing elements (also within individual line points). If update is False, the existing state will be replaced entirely by the new state.
 
 	Args:
-		state (MapState): The map state to update, containing points and lines.
-		update (bool): If True, merge the state recursively with the existing state, adding only missing elements (also within individual line points). If False, replace the existing state entirely. Default is True.
+		state (MapState): A dict consisting of a point array and a lines array representing the new state of the map. Points add markers to the map, while lines add connected markers. Lines with the same name will be merged together if update is True.
+		update (bool): If True, the new state will be merged with the existing state, adding only missing elements. If False, the existing state will be replaced entirely by the new state.
 	"""
+	from app.utils.bridge import bridge
 	global map_state
 	if not update:
 		map_state = state
+		bridge.map_state_updated.emit(map_state)
 		return
 
 	# Merge points: add only points not already present
-	existing_points = {(p.lat, p.lng, p.name) for p in map_state['points']}
+	existing_points = {(p['lat'], p['lng'], p['name']) for p in map_state['points']}
 	for point in state['points']:
-		key = (point.lat, point.lng, point.name)
+		key = (point['lat'], point['lng'], point['name'])
 		if key not in existing_points:
 			map_state['points'].append(point)
 			existing_points.add(key)
 
 	# Merge lines: if a line with the same name exists, merge its points;
 	# otherwise add the entire line
-	existing_lines = {line.name: line for line in map_state['lines']}
+	existing_lines = {line['name']: line for line in map_state['lines']}
 	for new_line in state['lines']:
-		line_name = new_line.name
+		line_name = new_line['name']
 		if line_name is not None and line_name in existing_lines:
 			# Merge points within the existing line
 			existing_line = existing_lines[line_name]
-			existing_line_points = {(p.lat, p.lng, p.name) for p in existing_line.points}
-			for point in new_line.points:
-				key = (point.lat, point.lng, point.name)
+			existing_line_points = {(p['lat'], p['lng'], p['name']) for p in existing_line['points']}
+			for point in new_line['points']:
+				key = (point['lat'], point['lng'], point['name'])
 				if key not in existing_line_points:
-					existing_line.points.append(point)
+					existing_line['points'].append(point)
 					existing_line_points.add(key)
 		else:
 			map_state['lines'].append(new_line)
 			if line_name is not None:
 				existing_lines[line_name] = new_line
 
-	from app.utils.bridge import bridge
 	bridge.map_state_updated.emit(map_state)
 
 def get_map_state() -> MapState:
-	"""Return the state of the map, the actual markers and lines already added and drawn.
+	"""Returns the current state of the map, including all points and lines.
 
 	Returns:
-		MapState: a dict consisting of a point array and a lines array
+		MapState: A dict containing the current points and lines on the map.
 	"""
 	return map_state

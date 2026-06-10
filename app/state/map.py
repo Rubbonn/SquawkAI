@@ -1,5 +1,13 @@
-from app.utils.models import Point, Line
-from typing import TypedDict
+from typing import TypedDict, Optional
+
+class Point(TypedDict):
+    lat: float
+    lng: float
+    name: Optional[str]
+    
+class Line(TypedDict):
+    points: list[Point]
+    name: Optional[str]
 
 class MapState(TypedDict):
     points: list[Point]

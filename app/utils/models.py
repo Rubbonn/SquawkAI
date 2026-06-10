@@ -10,12 +10,3 @@ class Document(BaseModel):
     airac: str = Field(description='The AIRAC cycle associated with the document, e.g., 2305, 2306, etc. Use only numbers, no separators.')
     title: str = Field(description='The title of the document, typically extracted from the PDF metadata or content.')
     summary: str = Field(description='A summary of the document scope and content.')
-
-class Point(BaseModel):
-    lat: float = Field(description='Latitude of the point on the map.')
-    lng: float = Field(description='Longitude of the point on the map.')
-    name: Optional[str] = Field(description='An optional name for the point to display on the map.', default=None)
-
-class Line(BaseModel):
-    points: list[Point] = Field(description='A series of points that define the line on the map.')
-    name: Optional[str] = Field(description='An optional name for the line to display on the map.', default=None)

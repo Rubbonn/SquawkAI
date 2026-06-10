@@ -234,7 +234,7 @@ if(hasWebChannelSupport) {
 			console.log('New thread created (mock)');
 		},
 		mapStateUpdated: async (callback: (state: MapState) => void) => {
-			// Mock implementation, does nothing
+			callback({'points': [{'lat': 45.6408, 'lng': 8.7347, 'name': 'MMP VOR/DME (Malpensa)'}, {'lat': 45.6467, 'lng': 9.0217, 'name': 'SRN VOR/DME (Saronno)'}, {'lat': 45.7151, 'lng': 8.639, 'name': 'D6 MMP (RDL 318/6 NM)'}, {'lat': 45.7164, 'lng': 8.8603, 'name': 'IRKED'}, {'lat': 45.5242, 'lng': 8.7352, 'name': 'MC651'}, {'lat': 45.2375, 'lng': 8.4031, 'name': 'FARAK'}], 'lines': [{'points': [{'lat': 45.6408, 'lng': 8.7347, 'name': 'MMP VOR/DME (Malpensa)'}, {'lat': 45.7151, 'lng': 8.639, 'name': 'D6 MMP (RDL 318/6 NM)'}, {'lat': 45.7164, 'lng': 8.8603, 'name': 'IRKED (RDL 303/8 NM SRN)'}], 'name': 'IRKED 8E (RWY 35L)'}, {'points': [{'lat': 45.6408, 'lng': 8.7347, 'name': 'MMP VOR/DME (Malpensa)'}, {'lat': 45.5242, 'lng': 8.7352, 'name': 'MC651 (RDL 177/7 NM)'}, {'lat': 45.2375, 'lng': 8.4031, 'name': 'FARAK'}], 'name': 'FARAK 5Y (RWY 17L/R)'}]});
 		}
 	}	
 } else {
