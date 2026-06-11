@@ -12,7 +12,6 @@
 
 <div class="map-page">
 	<div class="map-container" bind:this={mapContainer}></div>
-	<button onclick={() => {mapState.points.push({ lat: 45.46111, lng: 9.159444, name: 'Test Point' })}}>Add Test Point</button>
 </div>
 
 <script lang="ts">
