@@ -81,6 +81,8 @@
 	let pendingMessages: number = 0;
 
 	const adjustTextareaHeight = () => {
+		if(!textarea) return;
+		
 		textarea.style.height = 'auto';
 		textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
 	};

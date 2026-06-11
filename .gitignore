@@ -1,6 +1,7 @@
 .vscode
 .idea
 .venv
+.playwright-mcp
 .env
 node_modules
 .pyc
