@@ -3,6 +3,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-3);
+		flex: 1;
+		min-height: 0;
 
 		&__history {
 			display: flex;
