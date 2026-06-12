@@ -103,12 +103,12 @@
 		waitingForResponse = true;
 		try {
 			await bridge.sendMessage(message);
+			message = '';
 		} catch(error) {
 			messageHistory.splice(-1, pendingMessages);
 			adjustTextareaHeight();
 			alert(`Error sending message: ${error instanceof Error ? error.message : String(error)}`);
 		}
-		message = '';
 		waitingForResponse = false;
 		pendingMessages = 0;
 	};

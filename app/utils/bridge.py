@@ -2,10 +2,18 @@ from app.llm.llm import get_chat_agent
 from app.llm.tools import get_airport_weather, get_available_documents, get_document, set_map_state, get_map_state
 from app.utils.documents import document_index
 from langchain_core.runnables.config import RunnableConfig
-from langchain.messages import HumanMessage
+from langchain.messages import HumanMessage, SystemMessage
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal, QSettings
 from uuid import uuid4
+
+_system_message = '''You're a helpful assistant for pilots.
+You can provide informations about airports, weather, procedures eccetera.
+Use the documents available to you to ground your answers. If you don't know the answer to a question, say you don't know. Don't try to make up an answer.
+You can also plan entire flights, providing detailed procedures and weather information.
+Use the map to complete your answers with visual information. You can set the map state to show specific locations, routes and so on.
+If the user asks questions about other topics not related to aviation, steer the conversation back to aviation topics.
+Answer in a friendly and professional manner, as if you were a real pilot with years of experience.'''
 
 class Bridge(QObject):
 	document_index_updated = Signal(list)
@@ -15,6 +23,8 @@ class Bridge(QObject):
 	def __init__(self):
 		super().__init__()
 		self._thread_id = str(uuid4())
+		agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state])
+		agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
 		document_index.document_added.connect(lambda: self.document_index_updated.emit(document_index.documents))
 		document_index.document_removed.connect(lambda: self.document_index_updated.emit(document_index.documents))
 
@@ -101,5 +111,7 @@ class Bridge(QObject):
 	@Slot()
 	def new_thread(self) -> None:
 		self._thread_id = str(uuid4())
+		agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state])
+		agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
 
 bridge = Bridge()
