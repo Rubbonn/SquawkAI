@@ -16,6 +16,7 @@
 		&__message {
 			padding: var(--space-2) var(--space-3);
 			background-color: var(--bg-elevated);
+			max-width: 100%;
 
 			&--user {
 				align-self: flex-end;
@@ -25,6 +26,10 @@
 			&--assistant {
 				align-self: flex-start;
 				border-radius: var(--radius-md) var(--radius-md) var(--radius-md) 0;
+			}
+
+			&-content :global(pre) {
+				overflow-x: scroll;
 			}
 		}
 

@@ -56,6 +56,7 @@
 			scrollbar-gutter: stable;
 			&::-webkit-scrollbar {
 				width: var(--space-2);
+				height: var(--space-2);
 			}
 
 			&::-webkit-scrollbar-track {

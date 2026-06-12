@@ -228,7 +228,54 @@ if(hasWebChannelSupport) {
 		},
 		messageReceived: async (callback: (message: string) => void) => {
 			// Mock implementation, does nothing
+			callback('Hello');
 			callback('This is a message received from the backend (mock).');
+			callback(`# Il Testo Segnaposto: Un'Esplorazione del Lorem Ipsum
+
+## 1. Origini e utilizzi classici
+
+Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Proin ac nisl eget purus facilisis tristique. Mauris eleifend, *sapien at sodales elementum*, dui justo eleifend lorem, id tristique nulla augue sit amet lacus. In hac habitasse platea dictumst. Curabitur sed vestibulum turpis, id porta tellus. Etiam convallis purus vitae feugiat feugiat. Sed vitae urna condimentum, elementum eros id, sodales sem.
+
+I punti chiave dell'utilizzo del Lorem Ipsum includono:
+
+* **Neutralità:** Permette di valutare il layout senza farsi distrarre dal significato del testo.
+* **Distribuzione:** Ha una distribuzione delle lettere più o meno normale.
+* **Tradizione:** Utilizzato dai tipografi fin dal XVI secolo.
+
+## 2. Lo sviluppo nel tempo e varianti
+
+Ut imperdiet lectus ac neque feugiat elementum. Duis id nulla ac sem feugiat pharetra vel id erat. Suspendisse potenti. Nam \`Lorem Ipsum\` non è semplicemente un testo casuale, ma ha radici nel testo classico latino del 45 a.C. Se desideri implementare una funzione per generare testo segnaposto automatizzato, potresti usare una sintassi simile a questa:
+
+\`\`\`python
+def genera_lorem(paragrafi):
+    base_text = "Lorem ipsum dolor sit amet..."
+    return [base_text for _ in range(paragrafi)]
+
+\`\`\`
+
+Nullam sit amet risus feugiat, elementum tellus non, condimentum sem. Morbi dictum scelerisque erat ac dictum.
+
+## 3. Filosofia del design grafico
+
+> "Il contenuto precede il design. Il design in assenza di contenuto non è design, è decorazione."
+> — *Jeffrey Zeldman*
+
+In linea con questa filosofia, il terzo paragrafo ci ricorda che Aliquam erat volutpat. Sed cursus dui eget eros dictum, eu tristique libero malesuada. Cras ac nisl rhoncus, pretium erat id, finibus nulla. Donec pretium magna id porta convallis. **Vestibulum ante ipsum primis in faucibus** orci luctus et ultrices posuere cubilia curae; Aliquam porttitor ligula sed nunc interdum, eget sodales tortor bibendum.
+
+## 4. Applicazioni nel Web moderno
+
+Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi interdum, lectus sed consectetur sodales, **felis lectus bibendum eros**, ut pharetra massa velit nec nisl. In questa fase dello sviluppo, gli sviluppatori usano spesso pacchetti come \`lorem-ipsum\` via npm.
+
+Ecco i passaggi tipici per l'installazione in un progetto:
+
+1. Aprire il terminale nella cartella di progetto.
+2. Eseguire il comando di installazione: \`npm install lorem-ipsum\`.
+3. Importare il modulo all'interno del file JavaScript o TypeScript.
+4. Generare la quantità di testo necessaria per i componenti dell'interfaccia.
+
+## 5. Conclusioni e considerazioni finali
+
+Present id magna pretium, dictum sem interdum, tempor erat. Vivamus sed eros tristique, lacinia turpis non, aliquet ante. Phasellus congue, nulla vitae accumsan condimentum, *orci eros pellentesque leo*, ac sollicitudin magna diam sit amet ligula. Proin eu est a lectus efficitur vestibulum id a enim. Mauris ac elit ex. Curabitur eget nisl eget eros sodales dictum. Vivamus pellentesque mi ac sem varius, sit amet hendrerit ante facilisis. Ultrices posuere cubilia curae; Aliquam erat volutpat egestas.`);
 		},
 		newThread: async () => {
 			console.log('New thread created (mock)');
