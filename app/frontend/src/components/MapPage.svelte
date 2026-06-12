@@ -78,7 +78,23 @@
 		if(mapState.points.length === 0 && mapState.lines.length === 0)
 			return;
 
+		const resetMap = () => {
+			for(const marker of addedMarkers)
+				marker.remove();
+
+			for(const layer of addedLayers)
+				map.removeLayer(layer);
+
+			for(const source of addedSources)
+				map.removeSource(source);
+
+			addedMarkers.length = 0;
+			addedSources.length = 0;
+			addedLayers.length = 0;
+		}
+
 		const updateMap = () => {
+			resetMap();
 			for(const marker of mapState.points) {
 				const popup = new maplibregl.Popup({ offset: 25 });
 				if(marker.name)
@@ -151,21 +167,6 @@
 			updateMap();
 		} else {
 			map.once('style.load', updateMap);
-		}
-
-		return () => {
-			for(const marker of addedMarkers)
-				marker.remove();
-
-			for(const layer of addedLayers)
-				map.removeLayer(layer);
-
-			for(const source of addedSources)
-				map.removeSource(source);
-
-			addedMarkers.length = 0;
-			addedSources.length = 0;
-			addedLayers.length = 0;
 		}
 	});
 </script>
