@@ -14,6 +14,8 @@ class MainWindow(QWebEngineView):
 			self._web_tools.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
 			self._web_tools.resize(1280, 512)
 			self.page().setDevToolsPage(self._web_tools.page())
+		else:
+			self.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
 	
 	def closeEvent(self, event: QCloseEvent) -> None:
 		if self._web_tools is not None:
