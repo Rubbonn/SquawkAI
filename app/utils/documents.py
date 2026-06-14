@@ -49,11 +49,10 @@ class DocumentIndex(QObject):
 	def get_document(self, name: str) -> Document | None:
 		doc = next((d for d in self._documents if d.name == name), None)
 		if doc is None:
-			raise ValueError(f"Document with name {name} not found.")
+			raise ValueError(f'Document with name "{name}" not found.')
 		
 		if not Path(doc.path).exists():
-			self.remove_document(name)
-			raise FileNotFoundError(f"File for document {name} not found. The document has been removed from the index.")
+			raise FileNotFoundError(f'File for document "{name}" not found.')
 		
 		return doc
 

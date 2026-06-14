@@ -21,7 +21,7 @@ if __name__ == "__main__":
 	browser = MainWindow(debug=(node_env == 'development'))
 	target = QUrl.fromLocalFile(os.path.join(base_dir, 'app/frontend/dist/index.html')) if node_env == 'production' else QUrl('http://localhost:5173')
 	browser.load(target)
-	browser.resize(1280, 1024)
+	browser.setFixedSize(1280, 1024)
 	browser.show()
 
 	channel = QWebChannel()

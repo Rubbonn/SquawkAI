@@ -1,54 +1,83 @@
-# SquawkAI
+# SquawkAI 🦅
 
-SquawkAI è un copilota digitale locale incentrato su una **chat tecnica con LLM** per supportare piloti e operatori aeronautici nella consultazione, nella pianificazione e nell’analisi operativa del volo.
+SquawkAI è un **copilota digitale locale** con chat AI pensato per piloti e operatori aeronautici. Unisce in un'unica applicazione desktop consultazione documentale (AIP/PDF), meteo operativo (METAR/TAF), visualizzazione cartografica e assistenza contestuale via chat.
 
-L’obiettivo del progetto resta unire in un’unica applicazione:
+![SquawkAI Screenshot]()
 
-- consultazione documentale aeronautica locale (AIP/PDF);
-- supporto meteo operativo (METAR/TAF);
-- pianificazione e visualizzazione rotta;
-- assistenza contestuale via chat con risposta testuale e/o visualizzazione su mappa.
+## Perché è utile
 
-## Perché è utile (anche per chi non è tecnico)
+SquawkAI riduce il tempo necessario a cercare informazioni operative sparse tra fonti diverse e le trasforma in decisioni pratiche.
 
-SquawkAI nasce per ridurre il tempo necessario a cercare informazioni operative e trasformarle in decisioni pratiche.
+- **Briefing pre-volo rapido**: chiedi in chat una sintesi di meteo e vincoli operativi per la tua rotta.
+- **Consultazione documentale contestuale**: durante la preparazione, la chat richiama automaticamente procedure AIP pertinenti.
+- **Pianificazione rotta interattiva**: la conversazione può evolvere in una proposta di rotta con marker e linee visualizzati sulla mappa.
+- **Spiegazione visiva**: procedure complesse possono essere rappresentate graficamente sulla mappa.
 
-Esempi d’uso:
+Problemi risolti:
 
-- **Briefing pre-volo più rapido**: l’utente chiede in chat una sintesi di meteo e vincoli operativi, ottenendo una risposta unica e leggibile.
-- **Controllo documentale contestuale**: durante la preparazione, la chat richiama procedure e riferimenti documentali pertinenti alla fase del volo.
-- **Supporto alla pianificazione rotta**: la conversazione può evolvere in proposta di rotta con rappresentazione sulla mappa.
-- **Spiegazione visiva delle procedure**: procedure o passaggi complessi possono essere mostrati sulla mappa per una comprensione più immediata.
-
-Problemi che aiuta a risolvere:
-
-- frammentazione tra fonti diverse (documenti, meteo, strumenti separati);
+- frammentazione tra documenti, meteo e strumenti separati;
 - tempi lunghi di consultazione e cross-check;
-- difficoltà nel passare da informazione testuale a visione spaziale/operativa.
+- difficoltà nel passare da informazioni testuali a visione spaziale/operativa.
 
-## Funzionalità del progetto
+## Funzionalità
 
-### Area documentale e assistente
+### 💬 Chat con AI
 
-- Indicizzazione locale di documenti aeronautici (AIP e materiali correlati).
-- Chat LLM per Q&A operativo su procedure, regolamenti e comunicazioni.
-- Correlazione delle risposte con dati meteo e altre fonti informative disponibili.
-- Estensione prevista verso analisi documentale avanzata con supporto AI.
+- Chat multi-turno con memoria di conversazione.
+- Risposte in markdown con sintassi evidenziata.
+- Streaming incrementale della risposta.
+- Pulsante **New Chat** per resettare il thread.
+- Invio con `Enter`, nuova riga con `Shift+Enter`.
+- Disabilitazione automatica dell'input durante l'elaborazione.
 
-### Area meteo
+### 🤖 Integrazione con modelli Google AI
 
-- Ricerca meteo per aeroporto via codice ICAO.
-- Recupero METAR e TAF con visualizzazione raw e sintetica.
-- Schede meteo multiple con refresh e chiusura singola.
-- Indicatori rapidi per categoria volo, vento, visibilità e nubi.
+- Configurazione della **Google API Key** direttamente dall'app.
+- Selezione del modello tra tutti quelli disponibili (es. Gemini 1.5/2.0, etc.).
+- Elenco modelli scoperto automaticamente dall'API e filtrato (esclusi modelli TTS, image, robotics, etc.).
+- L'assistente ha accesso a strumenti per:
+  - recuperare METAR/TAF;
+  - consultare i documenti indicizzati;
+  - leggere e modificare lo stato della mappa (aggiungere marker e linee).
 
-### Area rotta e navigazione
+### 🗺️ Mappa interattiva
 
-- Navigazione interna tra sezioni (`Weather`, `Map`, `Documents`).
-- Pagina mappa dedicata alla visualizzazione rotta (in evoluzione).
-- Supporto previsto a generazione rotta tramite chat con rendering su mappa.
-- Possibile visualizzazione guidata di procedure direttamente su mappa a fini esplicativi.
-- Integrazione prevista con controlli/validazioni rotta su servizi esterni.
+- Mappa di navigazione VFR basata su **open flightmaps** con tile raster.
+- Visualizzazione di **marker** (punti) e **linee** (rotte) condivisi tra chat e mappa.
+- L'assistente AI può leggere e aggiornare la mappa in autonomia.
+- Reattività automatica della mappa ai cambiamenti di stato.
+- Controlli di zoom e navigazione.
+
+### 📄 Raccolta documentale
+
+- Indicizzazione di **file PDF** (singoli o intere cartelle) tramite selettore nativo.
+- Estrazione automatica dei metadati (nazione, sezione AIP, AIRAC, titolo e riepilogo) tramite AI.
+- Albero documenti navigabile gerarchicamente per **nazione → sezione AIP → documento**.
+- Schede collassabili per una navigazione compatta.
+- Rimozione di documenti dall'indice con conferma.
+- Indice persistentemente salvato nelle impostazioni dell'app.
+
+### 🌤️ Meteo operativo
+
+- Ricerca METAR e TAF per codice ICAO.
+- Schede multiple per diversi aeroporti, con refresh e chiusura singola.
+- Visualizzazione raw (report testuale) e sintetica con indicatori per:
+  - **categoria volo** (VFR/MVFR/IFR — con codici colore);
+  - **vento** (direzione, intensità e raffiche);
+  - **visibilità**;
+  - **nubi** (copertura e altezza).
+- Dati cachati in memoria per consultazione rapida.
+- Richieste concorrenti bloccate per evitare chiamate multiple.
+
+### ⚙️ Impostazioni
+
+- **Google API Key**: configurabile e salvata automaticamente.
+- **Modello AI**: selezionabile da menù a tendina popolato dall'API di Google.
+
+### 🖥️ Comportamento ambiente
+
+- **DEV**: finestra DevTools del browser integrata, menù contestuale abilitato, collegamento a `localhost:5173` (Vite dev server).
+- **PROD**: caricamento da build locale (`dist/index.html`), nessun DevTools, menù contestuale disabilitato.
 
 ## Utenti target
 
@@ -65,45 +94,29 @@ Problemi che aiuta a risolvere:
 - **Bridge IPC**: Qt `QWebChannel` in runtime desktop
 - **Modalità sviluppo frontend**: bridge mock via fetch HTTP (con proxy CORS)
 
-### Flusso tecnico principale (meteo)
-
-1. L’utente inserisce un ICAO nella pagina meteo.
-2. Il frontend invoca `bridge.getAirportWeather`.
-3. In desktop mode, Python richiama `aviationweather.gov` (METAR + TAF).
-4. Il risultato viene renderizzato in card con indicatori sintetici e raw report.
-
 ### Perché queste scelte tecnologiche
 
-- **Svelte + Vite**: interfaccia reattiva e leggera, avvio rapido in sviluppo e manutenzione più semplice nel tempo.
-- **Qt WebChannel (IPC)**: canale chiaro tra frontend e backend desktop, utile per separare responsabilità e integrare dati esterni in modo ordinato.
-- **Architettura locale-first**: maggiore controllo operativo del runtime applicativo desktop e migliore integrazione con workflow tecnici esistenti.
+- **Svelte + Vite**: interfaccia reattiva e leggera, avvio rapido in sviluppo e manutenzione semplice.
+- **Qt WebChannel (IPC)**: canale pulito tra frontend e backend, responsabilità ben separate.
+- **Architettura locale-first**: controllo operativo completo del runtime desktop, nessuna dipendenza da cloud per il funzionamento base.
 
 ## Stack tecnologico
 
 ### Backend
 
-- Python
+- Python 3.10+
 - PySide6
 - httpx
+- langchain + langchain-google-genai
+- pydantic
 
 ### Frontend
 
 - Svelte 5
-- Vite
-- Sass
-
-### Infrastruttura locale
-
-- Qt WebEngine + Qt WebChannel (integrazione desktop/web)
-- Dev Container con Xvfb + x11vnc + noVNC
-
-## Struttura repository
-
-- `/main.py`: avvio app desktop Qt + registrazione bridge WebChannel
-- `/app/utils.py`: metodo backend `get_airport_weather`
-- `/app/frontend`: applicazione Svelte/Vite
-- `/.devcontainer`: ambiente di sviluppo con desktop remoto (VNC/noVNC)
-- `/DESIGN.md`: token e linee guida visual
+- Vite 8
+- Sass (scss)
+- MapLibre GL JS
+- marked (render markdown)
 
 ## Requisiti
 
@@ -111,17 +124,12 @@ Problemi che aiuta a risolvere:
 - Node.js 20+
 - npm
 
-Dipendenze Python principali:
-
-- `pyside6`
-- `httpx`
-
 ## Avvio in sviluppo locale
 
 ### 1) Frontend (Svelte)
 
 ```bash
-cd /home/runner/work/SquawkAI/SquawkAI/app/frontend
+cd app/frontend
 npm ci
 npm run dev
 ```
@@ -131,17 +139,37 @@ npm run dev
 In un secondo terminale:
 
 ```bash
-cd /home/runner/work/SquawkAI/SquawkAI
 python -m venv .venv
-source .venv/bin/activate
+.venv\Scripts\activate   # Windows
+# oppure: source .venv/bin/activate  # Linux/macOS
 pip install -r requirements.txt
 python main.py
 ```
 
-## Ambiente Dev Container
+### 3) Variabili d'ambiente
 
-Il repository include configurazione `.devcontainer` con:
+Crea un file `.env` nella directory principale del progetto:
 
-- immagine `universal:linux`;
-- setup automatico Xvfb + x11vnc + noVNC;
-- porta `6080` per desktop remoto nel browser.
+```env
+NODE_ENV=development
+```
+
+Puoi anche inserire la `GOOGLE_API_KEY` nel file `.env`, ma è consigliato configurarla direttamente dall'interfaccia dell'app (pagina Settings).
+
+## Build di produzione
+
+```bash
+cd app/frontend
+npm ci
+npm run build
+```
+
+L'app desktop caricherà automaticamente i file dalla cartella `app/frontend/dist/`.
+
+## Screenshot
+
+> *Aggiungi qui screenshot delle schermate principali: chat, mappa, documenti, meteo.*
+
+## Licenza
+
+ISC
