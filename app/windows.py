@@ -19,6 +19,7 @@ class MainWindow(QWebEngineView):
 	
 	def closeEvent(self, event: QCloseEvent) -> None:
 		if self._web_tools is not None:
+			self.page().setDevToolsPage(None)  # type: ignore[arg-type]
 			self._web_tools.close()
 		return super().closeEvent(event)
 	
