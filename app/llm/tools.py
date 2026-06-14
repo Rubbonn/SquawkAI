@@ -107,3 +107,18 @@ def get_map_state() -> MapState:
 		MapState: A dict containing the current points and lines on the map.
 	"""
 	return map_state
+
+def get_current_datetime(utc: bool = False) -> str:
+	"""Returns the current date and time in ISO 8601 format.
+
+	Args:
+		utc (bool): If True, returns the current date and time in UTC else local time. Defaults to False.
+
+	Returns:
+		str: The current date and time as an ISO 8601 formatted string.
+	"""
+	from datetime import datetime, timezone
+	current_datetime = datetime.now(timezone.utc)
+	if utc:
+		return current_datetime.isoformat()
+	return current_datetime.astimezone().isoformat()
