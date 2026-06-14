@@ -38,7 +38,8 @@ Problemi risolti:
 - L'assistente ha accesso a strumenti per:
   - recuperare METAR/TAF;
   - consultare i documenti indicizzati;
-  - leggere e modificare lo stato della mappa (aggiungere marker e linee).
+  - leggere e modificare lo stato della mappa (aggiungere marker e linee);
+  - conoscere la data e l'ora correnti (locale o UTC).
 
 ### 🗺️ Mappa interattiva
 
