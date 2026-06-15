@@ -7,6 +7,34 @@
 	.map-container {
 		width: 100%;
 		height: 100%;
+
+		:global(.maplibregl-popup-content) {
+			background-color: var(--bg-elevated);
+			color: var(--text-primary);
+			border: 1px solid var(--border-default);
+			border-radius: var(--radius-md);
+			padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+			font-family: 'Inter', sans-serif;
+			font-size: 0.875rem;
+			font-weight: 500;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+		}
+
+		:global(.maplibregl-popup-tip) {
+			border-top-color: var(--bg-elevated) !important;
+		}
+
+		:global(.maplibregl-popup-close-button) {
+			color: var(--text-muted);
+			font-size: 1.125rem;
+			padding: var(--space-1);
+			border-radius: var(--radius-sm);
+
+			&:hover {
+				color: var(--text-primary);
+				background-color: transparent;
+			}
+		}
 	}
 </style>
 
@@ -25,6 +53,8 @@
 	const addedMarkers: maplibregl.Marker[] = [];
 	const addedSources: string[] = [];
 	const addedLayers: string[] = [];
+
+	const accentStrongColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-strong').trim() || '#ED9000';
 
 	onMount(() => {
 		map = new maplibregl.Map({
@@ -100,7 +130,7 @@
 				if(marker.name)
 					popup.setText(marker.name);
 
-				addedMarkers.push(new maplibregl.Marker()
+				addedMarkers.push(new maplibregl.Marker({ color: accentStrongColor })
 					.setLngLat([marker.lng, marker.lat])
 					.setPopup(popup).addTo(map));
 			}
@@ -112,7 +142,7 @@
 					if(marker.name)
 						popup.setText(marker.name);
 
-					addedMarkers.push(new maplibregl.Marker()
+					addedMarkers.push(new maplibregl.Marker({ color: accentStrongColor })
 						.setLngLat([marker.lng, marker.lat])
 						.setPopup(popup).addTo(map));
 				}
@@ -137,7 +167,7 @@
 						'line-cap': 'round',
 					},
 					paint: {
-						'line-color': '#333',
+						'line-color': accentStrongColor,
 						'line-width': 4,
 					}
 				}).addLayer({
@@ -151,9 +181,9 @@
 						'symbol-placement': 'line',
 					},
 					paint: {
-						'text-color': '#000',
-						'text-halo-color': '#fff',
-						'text-halo-width': 1,
+						'text-color': '#ffffff',
+						'text-halo-color': accentStrongColor,
+						'text-halo-width': 2,
 						'text-halo-blur': 1,
 					}
 				});
