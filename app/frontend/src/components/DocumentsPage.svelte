@@ -63,6 +63,7 @@
 										<CollapsibleCard>
 											{#snippet header()}
 												<h5>{doc.name}</h5>
+												{#if !doc.file_exists}<small class="text-danger"><strong><img class="d-inline-block" src="/icons/triangle-exclamation-solid__text-danger.svg" width="13" height="13" alt="Warning icon"> ATTENTION: The file does not exists in the path, restore the file or remove this document</strong></small>{/if}
 											{/snippet}
 											<ul>
 												<li><strong>Path:</strong> {doc.path}</li>

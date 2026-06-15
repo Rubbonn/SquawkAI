@@ -9,6 +9,7 @@ interface Document {
     airac: string;
     title: string;
     summary: string;
+    file_exists: boolean;
 }
 
 let documentIndex: {

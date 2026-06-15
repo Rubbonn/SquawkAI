@@ -58,6 +58,9 @@ class DocumentIndex(QObject):
 
 	@property
 	def documents(self) -> list[dict]:
-		return [d.model_dump() for d in self._documents]
+		documents = [d.model_dump() for d in self._documents]
+		for d in documents:
+			d['file_exists'] = Path.exists(d['path'])
+		return documents
 	
 document_index = DocumentIndex()

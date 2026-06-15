@@ -215,9 +215,9 @@ if(hasWebChannelSupport) {
 			// Mock implementation, does nothing
 			console.log('Fetching documents (mock)');
 			return [
-				{ name: 'sample.pdf', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.' },
-				{ name: 'example.pdf', path: '/path/to/example.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Example Document', summary: 'An example document for demonstration purposes.' },
-				{ name: 'test.pdf', path: '/path/to/test.pdf', nation: 'IT', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Test Document', summary: 'A test document for demonstration purposes.' }
+				{ name: 'sample.pdf', path: '/path/to/sample.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Sample Document', summary: 'A sample document for demonstration purposes.', file_exists: true },
+				{ name: 'example.pdf', path: '/path/to/example.pdf', nation: 'US', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Example Document', summary: 'An example document for demonstration purposes.', file_exists: true },
+				{ name: 'test.pdf', path: '/path/to/test.pdf', nation: 'IT', section: 'GEN', section_code: 'GEN', airac: '2301', title: 'Test Document', summary: 'A test document for demonstration purposes.', file_exists: true }
 			];
 		},
 		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {

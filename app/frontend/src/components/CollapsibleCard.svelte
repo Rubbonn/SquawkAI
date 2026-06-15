@@ -39,9 +39,11 @@
 
 <div class="collapsible-card ui-card">
 	<div class="collapsible-card__header" role="button" aria-expanded={!collapsed} tabindex="0" onclick={() => collapsed = !collapsed} onkeyup={(e) => { if (e.key === 'Enter' || e.key === ' ') { collapsed = !collapsed; } }}>
-		{#if header}
-			{@render header()}
-		{/if}
+		<div class="collapsible-card__header-child">
+			{#if header}
+				{@render header()}
+			{/if}
+		</div>
 		<img class="collapsible-card__toggle {collapsed ? 'collapsed' : ''}" src="/icons/angle-down-solid__text-primary.svg" alt="Toggle" width="32" height="32" />
 	</div>
 	<div class="collapsible-card__body collapse {collapsed ? 'collapsed' : ''}">
