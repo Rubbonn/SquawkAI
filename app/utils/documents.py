@@ -60,7 +60,8 @@ class DocumentIndex(QObject):
 	def documents(self) -> list[dict]:
 		documents = [d.model_dump() for d in self._documents]
 		for d in documents:
-			d['file_exists'] = Path.exists(d['path'])
+			path = Path(d['path'])
+			d['file_exists'] = path.exists()
 		return documents
 	
 document_index = DocumentIndex()

@@ -145,14 +145,27 @@ if(hasWebChannelSupport) {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
 				try {
-					webChannel!.objects.bridge.send_message(message, (response: { error: string | false }) => {
+					const onCleanup = () => {
+						clearTimeout(timeout);
+						webChannel!.objects.bridge.stop_message_stream.disconnect(onFinish);
+					}
+
+					const onFinish = (response: { error: string | false }) => {
+						onCleanup();
 						if(response.error) {
 							reject(new Error(`Backend error: ${response.error}`));
 							return;
 						}
 
 						resolve();
-					});
+					}
+
+					const timeout = setTimeout(() => {
+						onCleanup();
+						reject(new Error('Backend method call timed out after 10 minutes'));
+					}, 10 * 60 * 1000); // 10 minutes timeout for long-running operations
+					webChannel!.objects.bridge.stop_message_stream.connect(onFinish);
+					webChannel!.objects.bridge.send_message(message);
 				} catch(error) {
 					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 				}

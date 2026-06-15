@@ -1,6 +1,7 @@
 from app.llm.llm import get_chat_agent
 from app.llm.tools import get_airport_weather, get_available_documents, get_document, set_map_state, get_map_state, get_current_datetime
 from app.utils.documents import document_index
+from app.workers import GenericWorker
 from langchain_core.runnables.config import RunnableConfig
 from langchain.messages import HumanMessage, SystemMessage
 from pathlib import Path
@@ -18,13 +19,15 @@ Answer in a friendly and professional manner, as if you were a real pilot with y
 class Bridge(QObject):
 	document_index_updated = Signal(list)
 	message_received = Signal(str)
+	stop_message_stream = Signal(dict)
 	map_state_updated = Signal(dict)
 
 	def __init__(self):
 		super().__init__()
 		self._thread_id = str(uuid4())
-		agent = get_chat_agent()
-		agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
+		self._workers: set[GenericWorker] = set()
+		#agent = get_chat_agent()
+		#agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
 		document_index.document_added.connect(lambda: self.document_index_updated.emit(document_index.documents))
 		document_index.document_removed.connect(lambda: self.document_index_updated.emit(document_index.documents))
 
@@ -90,28 +93,36 @@ class Bridge(QObject):
 	def get_documents(self) -> list[dict]:
 		return document_index.documents
 	
-	@Slot(str, result=dict)
-	def send_message(self, message: str) -> dict[str, str | bool]:
-		agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state, get_current_datetime])
-		thread_config = {"thread_id": self._thread_id}
-		try:
-			for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=RunnableConfig(configurable=thread_config), stream_mode='updates'):
-				if response.get('model') is None:
-					continue
+	@Slot(str, result=None)
+	def send_message(self, message: str) -> None:
+		def task(message: str) -> dict[str, str | bool]:
+			thread_config = {"thread_id": self._thread_id}
+			try:
+				agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state, get_current_datetime])
+				for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=RunnableConfig(configurable=thread_config), stream_mode='updates'):
+					if response.get('model') is None:
+						continue
 
-				message_blocks = response['model']['messages'][-1].content_blocks
-				for block in message_blocks:
-					if block['type'] == 'text':
-						self.message_received.emit(block['text'])
-		except Exception as e:
-			return {'error': str(e)}
+					message_blocks = response['model']['messages'][-1].content_blocks
+					for block in message_blocks:
+						if block['type'] == 'text':
+							self.message_received.emit(block['text'])
+			except Exception as e:
+				return {'error': str(e)}
+			
+			return {'error': False}
 		
-		return {'error': False}
-	
+		worker = GenericWorker(task, message)
+		self._workers.add(worker)
+		worker.result_ready.connect(lambda result: self.stop_message_stream.emit(result))
+		worker.runtime_error.connect(lambda e: self.stop_message_stream.emit({'error': str(e)}))
+		worker.finished.connect(lambda: self._workers.discard(worker))
+		worker.start()
+
 	@Slot()
 	def new_thread(self) -> None:
 		self._thread_id = str(uuid4())
-		agent = get_chat_agent()
-		agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
+		#agent = get_chat_agent()
+		#agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
 
 bridge = Bridge()
