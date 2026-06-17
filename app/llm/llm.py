@@ -20,7 +20,7 @@ def get_chat_model(temperature: float = 0.7) -> BaseChatModel:
 		api_key=google_api_key
 	)
 
-def get_chat_agent(temperature: float = 0.7, tools: list[Callable] = []):
+def get_chat_agent(temperature: float = 0.7, tools: list[Callable] = [], system_prompt: str = ''):
 	from langchain.agents.middleware import wrap_tool_call
 	from langchain.messages import ToolMessage
 	from langchain.tools.tool_node import ToolCallRequest
@@ -43,6 +43,7 @@ def get_chat_agent(temperature: float = 0.7, tools: list[Callable] = []):
 	return create_agent(
 		model=get_chat_model(temperature=temperature),
 		tools=tools,
+		system_prompt=system_prompt,
 		middleware=[handle_tool_errors],
 		checkpointer=_checkpointer,
 	)

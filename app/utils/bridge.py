@@ -3,7 +3,7 @@ from app.llm.tools import get_airport_weather, get_available_documents, get_docu
 from app.utils.documents import document_index
 from app.workers import GenericWorker
 from langchain_core.runnables.config import RunnableConfig
-from langchain.messages import HumanMessage, SystemMessage
+from langchain.messages import HumanMessage
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal, QSettings
 from uuid import uuid4
@@ -25,10 +25,8 @@ class Bridge(QObject):
 
 	def __init__(self):
 		super().__init__()
-		self._thread_id = str(uuid4())
+		self.new_thread()
 		self._workers: set[GenericWorker] = set()
-		#agent = get_chat_agent()
-		#agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
 		document_index.document_added.connect(lambda: self.document_index_updated.emit(document_index.documents))
 		document_index.document_removed.connect(lambda: self.document_index_updated.emit(document_index.documents))
 
@@ -104,7 +102,7 @@ class Bridge(QObject):
 		def task(message: str) -> dict[str, str | bool]:
 			thread_config = {"thread_id": self._thread_id}
 			try:
-				agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state, get_current_datetime])
+				agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state, get_current_datetime], system_prompt=_system_message)
 				for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=RunnableConfig(configurable=thread_config), stream_mode='updates'):
 					if response.get('model') is None:
 						continue
@@ -128,7 +126,5 @@ class Bridge(QObject):
 	@Slot()
 	def new_thread(self) -> None:
 		self._thread_id = str(uuid4())
-		#agent = get_chat_agent()
-		#agent.update_state(RunnableConfig(configurable={'thread_id': self._thread_id}), {'messages': [SystemMessage(content=_system_message)]})
 
 bridge = Bridge()
