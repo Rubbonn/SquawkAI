@@ -1,5 +1,6 @@
 <style lang="scss">
 	.chat {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-3);
@@ -51,6 +52,21 @@
 				max-height: 200px;
 			}
 		}
+
+		&__disabled {
+			height: 100%;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: #00000070;
+			color: var(--accent);
+			text-align: center;
+		}
 	}
 </style>
 
@@ -76,10 +92,14 @@
 		
 	</div>
 	<p class="text-small technical">Press Shift + Enter for a new line</p>
+	<div class="chat__disabled" class:d-none={settings.GOOGLE_API_KEY}>
+		<p><b>Set an Api Key in settings to use the chat feature</b></p>
+	</div>
 </div>
 
 <script lang="ts">
-	import { bridge } from '../services/backend-bridge';
+	import { bridge } from '../services/backend-bridge.ts';
+	import { settings } from '../state/settings.svelte.ts';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	marked.use(markedKatex({ throwOnError: false }));
