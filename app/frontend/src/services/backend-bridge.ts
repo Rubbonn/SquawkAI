@@ -90,14 +90,27 @@ if(hasWebChannelSupport) {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
 				try {
-					webChannel!.objects.bridge.index_new_files((response: { error: string | false }) => {
+					const onCleanup = () => {
+						clearTimeout(timeout);
+						webChannel!.objects.bridge.document_indexing_finished.disconnect(onFinish);
+					}
+
+					const onFinish = (response: { error: string | false }) => {
+						onCleanup();
 						if(response.error) {
 							reject(new Error(`Backend error: ${response.error}`));
 							return;
 						}
 
 						resolve();
-					});
+					}
+
+					const timeout = setTimeout(() => {
+						onCleanup();
+						reject(new Error('Backend method call timed out after 10 minutes'));
+					}, 10 * 60 * 1000); // 10 minutes timeout for long-running operations
+					webChannel!.objects.bridge.document_indexing_finished.connect(onFinish);
+					webChannel!.objects.bridge.index_new_files();
 				} catch(error) {
 					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 				}
@@ -107,14 +120,27 @@ if(hasWebChannelSupport) {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
 				try {
-					webChannel!.objects.bridge.index_new_folder((response: { error: string | false }) => {
+					const onCleanup = () => {
+						clearTimeout(timeout);
+						webChannel!.objects.bridge.document_indexing_finished.disconnect(onFinish);
+					}
+
+					const onFinish = (response: { error: string | false }) => {
+						onCleanup();
 						if(response.error) {
 							reject(new Error(`Backend error: ${response.error}`));
 							return;
 						}
 
 						resolve();
-					});
+					}
+
+					const timeout = setTimeout(() => {
+						onCleanup();
+						reject(new Error('Backend method call timed out after 10 minutes'));
+					}, 10 * 60 * 1000); // 10 minutes timeout for long-running operations
+					webChannel!.objects.bridge.document_indexing_finished.connect(onFinish);
+					webChannel!.objects.bridge.index_new_folder();
 				} catch(error) {
 					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 				}

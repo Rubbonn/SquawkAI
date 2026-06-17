@@ -18,6 +18,8 @@ Answer in a friendly and professional manner, as if you were a real pilot with y
 
 class Bridge(QObject):
 	document_index_updated = Signal(list)
+	document_indexing_progress = Signal(dict)
+	document_indexing_finished = Signal(dict)
 	message_received = Signal(str)
 	stop_message_stream = Signal(dict)
 	weather_received = Signal(dict)
@@ -49,41 +51,59 @@ class Bridge(QObject):
 		settings = QSettings()
 		settings.setValue(key, value)
 
-	@Slot(result=dict)
-	def index_new_files(self) -> dict[str, str | bool]:
+	@Slot(result=None)
+	def index_new_files(self) -> None:
 		from PySide6.QtWidgets import QFileDialog
 		filenames = QFileDialog.getOpenFileNames(None, 'Select Files to Index', filter='PDF Files (*.pdf)')[0]
 		if len(filenames) == 0:
-			return {'error': 'No files selected.'}
+			self.document_indexing_finished.emit({'error': 'No files selected.'})
+			return
 		
-		result: dict[str, str | bool] = {'error': False}
-		for filename in filenames:
-			try:
-				document_index.add_document(filename)
-			except Exception as e:
-				result['error'] = f'Error indexing file {filename}: {e}\n'
-		
-		return result
+		def index() -> dict[str, str | bool]:
+			result: dict[str, str | bool] = {'error': False}
+			for filename in filenames:
+				try:
+					document_index.add_document(filename)
+				except Exception as e:
+					result['error'] = f'Error indexing file {filename}: {e}\n'
+			
+			return result
+	
+		worker = GenericWorker(index)
+		self._workers.add(worker)
+		worker.result_ready.connect(lambda result: self.document_indexing_finished.emit(result))
+		worker.runtime_error.connect(lambda e: self.document_indexing_finished.emit({'error': str(e)}))
+		worker.finished.connect(lambda: self._workers.discard(worker))
+		worker.start()
 
-	@Slot(result=dict)
-	def index_new_folder(self) -> dict[str, str | bool]:
+	@Slot(result=None)
+	def index_new_folder(self) -> None:
 		from PySide6.QtWidgets import QFileDialog
 		foldername = QFileDialog.getExistingDirectory(None, 'Select Folder to Index')
 		if not foldername:
-			return {'error': 'No folder selected.'}
+			self.document_indexing_finished.emit({'error': 'No folder selected.'})
+			return
 		
-		filenames = list(Path(foldername).rglob('*.pdf'))
-		if len(filenames) == 0:
-			return {'error': 'No PDF files found in the selected folder.'}
-		
-		result: dict[str, str | bool] = {'error': False}
-		for path in filenames:
-			try:
-				document_index.add_document(path)
-			except Exception as e:
-				result['error'] = f'Error indexing file {path}: {e}\n'
+		def index() -> dict[str, str | bool]:
+			filenames = list(Path(foldername).rglob('*.pdf'))
+			if len(filenames) == 0:
+				return {'error': 'No PDF files found in the selected folder.'}
+			
+			result: dict[str, str | bool] = {'error': False}
+			for path in filenames:
+				try:
+					document_index.add_document(path)
+				except Exception as e:
+					result['error'] = f'Error indexing file {path}: {e}\n'
 
-		return result
+			return result
+		
+		worker = GenericWorker(index)
+		self._workers.add(worker)
+		worker.result_ready.connect(lambda result: self.document_indexing_finished.emit(result))
+		worker.runtime_error.connect(lambda e: self.document_indexing_finished.emit({'error': str(e)}))
+		worker.finished.connect(lambda: self._workers.discard(worker))
+		worker.start()
 	
 	@Slot(str, result=dict)
 	def remove_document(self, name: str) -> dict[str, str | bool]:
