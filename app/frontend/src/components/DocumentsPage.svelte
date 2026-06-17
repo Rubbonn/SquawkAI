@@ -18,6 +18,7 @@
 		}
 
 		&__upload-area {
+			position: relative;
 			background-color: var(--bg-surface);
 			border: 2px dashed var(--border-default);
 			border-radius: var(--radius-md);
@@ -27,6 +28,21 @@
 			align-items: center;
 			justify-content: center;
 			gap: var(--space-2);
+			text-align: center;
+		}
+
+		&__upload-disabled {
+			height: 100%;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: #00000070;
+			color: var(--accent);
 			text-align: center;
 		}
 	}
@@ -42,8 +58,11 @@
 			<div class="documents-page__upload-area">
 				<img src="/icons/upload.png" alt="Upload Icon" width="48" height="48" />
 				<p class="text-small technical">Upload operational manuals, NOTAMs, or charts. Supported formats: PDF, DOCX, TXT.</p>
-				<button class="btn btn-primary" onclick={handleFilesClick}>Select files</button>
-				<button class="btn btn-primary" onclick={handleFoldersClick}>Select folders</button>
+				<button class="btn btn-primary" disabled={indexInProgress} onclick={handleFilesClick}>Select files</button>
+				<button class="btn btn-primary" disabled={indexInProgress} onclick={handleFoldersClick}>Select folders</button>
+				<div class="documents-page__upload-disabled" class:d-none={settings.GOOGLE_API_KEY}>
+					<p><b>Set an Api Key in settings to use the document library feature</b></p>
+				</div>
 			</div>
 		</div>
 		<div class="documents-page__right-column">
@@ -89,25 +108,32 @@
 </div>
 
 <script lang="ts">
-	import { bridge } from '../services/backend-bridge';
+	import { bridge } from '../services/backend-bridge.ts';
+	import { settings } from '../state/settings.svelte.ts';
 	import { documentIndex, type Document } from '../state/document-index.svelte';
 
+	let indexInProgress = $state(false);
+
 	const handleFilesClick = async () => {
+		indexInProgress = true;
 		try {
 			await bridge.indexNewFiles();
 			alert('Files indexed successfully!');
 		} catch (error) {
 			alert(`Failed to index files. Details: ${error instanceof Error ? error.message : String(error)}`);
 		}
+		indexInProgress = false;
 	};
 
 	const handleFoldersClick = async () => {
+		indexInProgress = true;
 		try {
 			await bridge.indexNewFolder();
 			alert('Folder indexed successfully!');
 		} catch (error) {
 			alert(`Failed to index folder. Details: ${error instanceof Error ? error.message : String(error)}`);
 		}
+		indexInProgress = false;
 	};
 
 	const handleRemoveDocument = async (doc: string) => {
