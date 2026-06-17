@@ -20,6 +20,7 @@ class Bridge(QObject):
 	document_index_updated = Signal(list)
 	message_received = Signal(str)
 	stop_message_stream = Signal(dict)
+	weather_received = Signal(dict)
 	map_state_updated = Signal(dict)
 
 	def __init__(self):
@@ -31,9 +32,14 @@ class Bridge(QObject):
 		document_index.document_added.connect(lambda: self.document_index_updated.emit(document_index.documents))
 		document_index.document_removed.connect(lambda: self.document_index_updated.emit(document_index.documents))
 
-	@Slot(str, result=dict)
-	def get_airport_weather(self, icao: str) -> dict:
-		return get_airport_weather(icao)
+	@Slot(str, result=None)
+	def get_airport_weather(self, icao: str) -> None:
+		worker = GenericWorker(get_airport_weather, icao)
+		self._workers.add(worker)
+		worker.result_ready.connect(lambda result: self.weather_received.emit(result))
+		worker.runtime_error.connect(lambda e: self.weather_received.emit({'error': str(e)}))
+		worker.finished.connect(lambda: self._workers.discard(worker))
+		worker.start()
 	
 	@Slot(str, result=str)
 	def get_setting(self, key: str) -> str:

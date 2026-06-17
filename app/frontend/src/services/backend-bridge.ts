@@ -42,17 +42,27 @@ if(hasWebChannelSupport) {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
 				try {
-					let timer = setTimeout(() => {
-						reject(new Error('Backend method call timed out after 30 seconds'));
-					}, 30000);
-					webChannel!.objects.bridge.get_airport_weather(icaoId, (response: { metar: Metar | null; taf: Taf | null } | { error: string }) => {
-						clearTimeout(timer);
-						if ('error' in response) {
+					const onCleanup = () => {
+						clearTimeout(timeout);
+						webChannel!.objects.bridge.weather_received.disconnect(onFinish);
+					}
+
+					const onFinish = (response: { metar: Metar | null; taf: Taf | null } | { error: string }) => {
+						onCleanup();
+						if('error' in response) {
 							reject(new Error(`Backend error: ${response.error}`));
 							return;
 						}
+
 						resolve(response);
-					});
+					}
+
+					const timeout = setTimeout(() => {
+						onCleanup();
+						reject(new Error('Backend method call timed out after 30 seconds'));
+					}, 30 * 1000); // 30 seconds timeout for long-running operations
+					webChannel!.objects.bridge.weather_received.connect(onFinish);
+					webChannel!.objects.bridge.get_airport_weather(icaoId);
 				} catch (error) {
 					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 				}

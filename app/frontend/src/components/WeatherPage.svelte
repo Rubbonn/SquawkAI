@@ -76,7 +76,10 @@
 			fetchingWeather = true;
 			const weatherData = await bridge.getAirportWeather(icao);
 			fetchingWeather = false;
-			if(!weatherData.metar && !weatherData.taf) return;
+			if(!weatherData.metar && !weatherData.taf) {
+				alert(`No weather found for ${icao}`);
+				return;
+			}
 			weatherDataList[icao] = weatherData;
 		} catch (error) {
 			fetchingWeather = false;
