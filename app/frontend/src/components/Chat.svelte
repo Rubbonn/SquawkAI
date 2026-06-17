@@ -81,6 +81,9 @@
 <script lang="ts">
 	import { bridge } from '../services/backend-bridge';
 	import { marked } from 'marked';
+	import markedKatex from 'marked-katex-extension';
+	marked.use(markedKatex({ throwOnError: false }));
+
 	let textarea: HTMLTextAreaElement;
 	let message: string = $state('');
 	let messageHistory: { role: 'user' | 'assistant', content: string }[] = $state([]);
