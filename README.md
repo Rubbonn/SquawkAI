@@ -2,7 +2,7 @@
 
 SquawkAI è un **copilota digitale locale** con chat AI pensato per piloti e operatori aeronautici. Unisce in un'unica applicazione desktop consultazione documentale (AIP/PDF), meteo operativo (METAR/TAF), visualizzazione cartografica e assistenza contestuale via chat.
 
-![Schermata principale - Chat]()<!-- TODO: screenshot della chat con conversazione -->
+![Schermata principale - Chat](https://github.com/user-attachments/assets/84e37494-39ee-4d4a-bc49-9a5802f43673)
 
 ## Perché è utile
 
@@ -50,7 +50,7 @@ Problemi risolti:
 - Reattività automatica della mappa ai cambiamenti di stato.
 - Controlli di zoom e navigazione.
 
-![Schermata Mappa]()<!-- TODO: screenshot della mappa con marker e rotte -->
+![Schermata Mappa](https://github.com/user-attachments/assets/a5704d83-2f6e-4f14-9975-9546020859a9)
 
 ### 📄 Raccolta documentale
 
@@ -63,7 +63,7 @@ Problemi risolti:
 - Rimozione di documenti dall'indice con conferma.
 - Indice persistentemente salvato nelle impostazioni dell'app.
 
-![Schermata Documenti]()<!-- TODO: screenshot della pagina documenti con albero e avvisi -->
+![Schermata Documenti](https://github.com/user-attachments/assets/f9a5906c-6170-4ca4-a285-acee6d973bf0)
 
 ### 🌤️ Meteo operativo
 
@@ -77,7 +77,7 @@ Problemi risolti:
 - Dati cachati in memoria per consultazione rapida.
 - Richieste concorrenti bloccate per evitare chiamate multiple.
 
-![Schermata Meteo]()<!-- TODO: screenshot delle schede meteo -->
+![Schermata Meteo](https://github.com/user-attachments/assets/dcc9f804-df2d-46eb-b140-06bb252f23e8)
 
 ### ⚙️ Impostazioni
 
@@ -178,11 +178,10 @@ L'app desktop caricherà automaticamente i file dalla cartella `app/frontend/dis
 
 ## Screenshot
 
-> *Aggiungi qui screenshot delle schermate principali:*
-> - *Chat — conversazione con risposta in markdown e formule LaTeX.* <!-- ![Chat Screenshot]() -->
-> - *Mappa — marker e rotte VFR.* <!-- ![Mappa Screenshot]() -->
-> - *Documenti — albero navigabile con filtro di ricerca.* <!-- ![Documenti Screenshot]() -->
-> - *Meteo — schede METAR/TAF con indicatori colore.* <!-- ![Meteo Screenshot]() -->
+![Chat Screenshot](https://github.com/user-attachments/assets/9166c82d-a919-4548-8b9a-b334b3a2a7e4)
+![Mappa Screenshot](https://github.com/user-attachments/assets/7020602c-1718-418d-9131-70f32f8cbf21)
+![Documenti Screenshot](https://github.com/user-attachments/assets/f9a5906c-6170-4ca4-a285-acee6d973bf0)
+![Meteo Screenshot](https://github.com/user-attachments/assets/dcc9f804-df2d-46eb-b140-06bb252f23e8)
 
 ## Licenza
 
