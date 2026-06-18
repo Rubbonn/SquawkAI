@@ -2,7 +2,7 @@
 
 SquawkAI è un **copilota digitale locale** con chat AI pensato per piloti e operatori aeronautici. Unisce in un'unica applicazione desktop consultazione documentale (AIP/PDF), meteo operativo (METAR/TAF), visualizzazione cartografica e assistenza contestuale via chat.
 
-![SquawkAI Screenshot]()
+![Schermata principale - Chat]()<!-- TODO: screenshot della chat con conversazione -->
 
 ## Perché è utile
 
@@ -29,6 +29,7 @@ Problemi risolti:
 - Pulsante **New Chat** per resettare il thread.
 - Invio con `Enter`, nuova riga con `Shift+Enter`.
 - Disabilitazione automatica dell'input durante l'elaborazione.
+- **Supporto formule LaTeX** tramite KaTeX — le formule scritte in notazione $...$ o $$...$$ vengono renderizzate automaticamente.
 
 ### 🤖 Integrazione con modelli Google AI
 
@@ -49,14 +50,20 @@ Problemi risolti:
 - Reattività automatica della mappa ai cambiamenti di stato.
 - Controlli di zoom e navigazione.
 
+![Schermata Mappa]()<!-- TODO: screenshot della mappa con marker e rotte -->
+
 ### 📄 Raccolta documentale
 
 - Indicizzazione di **file PDF** (singoli o intere cartelle) tramite selettore nativo.
 - Estrazione automatica dei metadati (nazione, sezione AIP, AIRAC, titolo e riepilogo) tramite AI.
 - Albero documenti navigabile gerarchicamente per **nazione → sezione AIP → documento**.
-- Schede collassabili per una navigazione compatta.
+- Schede collassabili per una navigazione ordinata e comprensibile.
+- **Ricerca in tempo reale** — casella di testo nella colonna di destra che filtra i documenti mentre scrivi.
+- **Bottone "Open file"** per aprire il documento direttamente con il programma predefinito del sistema.
 - Rimozione di documenti dall'indice con conferma.
 - Indice persistentemente salvato nelle impostazioni dell'app.
+
+![Schermata Documenti]()<!-- TODO: screenshot della pagina documenti con albero e avvisi -->
 
 ### 🌤️ Meteo operativo
 
@@ -69,6 +76,8 @@ Problemi risolti:
   - **nubi** (copertura e altezza).
 - Dati cachati in memoria per consultazione rapida.
 - Richieste concorrenti bloccate per evitare chiamate multiple.
+
+![Schermata Meteo]()<!-- TODO: screenshot delle schede meteo -->
 
 ### ⚙️ Impostazioni
 
@@ -169,7 +178,11 @@ L'app desktop caricherà automaticamente i file dalla cartella `app/frontend/dis
 
 ## Screenshot
 
-> *Aggiungi qui screenshot delle schermate principali: chat, mappa, documenti, meteo.*
+> *Aggiungi qui screenshot delle schermate principali:*
+> - *Chat — conversazione con risposta in markdown e formule LaTeX.* <!-- ![Chat Screenshot]() -->
+> - *Mappa — marker e rotte VFR.* <!-- ![Mappa Screenshot]() -->
+> - *Documenti — albero navigabile con filtro di ricerca.* <!-- ![Documenti Screenshot]() -->
+> - *Meteo — schede METAR/TAF con indicatori colore.* <!-- ![Meteo Screenshot]() -->
 
 ## Licenza
 
