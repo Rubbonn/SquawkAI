@@ -45,6 +45,12 @@
 			color: var(--accent);
 			text-align: center;
 		}
+
+		&__actions {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
 	}
 </style>
 
@@ -94,7 +100,10 @@
 												<li><strong>Summary:</strong> {doc.summary}</li>
 											</ul>
 											<hr/>
-											<button class="btn btn-invisible text-danger" onclick={() => handleRemoveDocument(doc.name)}><img class="d-inline-block" src="/icons/trash-can-solid__text-danger.svg" alt="Remove Document Icon" width="16" height="16" /> Remove Document</button>
+											<div class="documents-page__actions">
+												<button class="btn btn-invisible text-danger" onclick={() => handleRemoveDocument(doc.name)}><img class="d-inline-block" src="/icons/trash-can-solid__text-danger.svg" alt="Remove Document Icon" width="16" height="16" /> Remove Document</button>
+												<button class="btn btn-secondary" onclick={() => bridge.openFile(doc.path)}>Open file</button>
+											</div>
 										</CollapsibleCard>
 									{/each}
 								</CollapsibleCard>

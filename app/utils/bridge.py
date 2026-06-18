@@ -147,4 +147,10 @@ class Bridge(QObject):
 	def new_thread(self) -> None:
 		self._thread_id = str(uuid4())
 
+	@Slot(str, result=None)
+	def open_file(self, filename: str):
+		from PySide6.QtGui import QDesktopServices
+		filepath = Path(filename).absolute()
+		QDesktopServices.openUrl(f'file:///{filepath}')
+
 bridge = Bridge()
