@@ -55,6 +55,5 @@
 
 <script lang="ts">
 	import { type Snippet } from 'svelte';
-	const { header, children }: { header: Snippet; children: Snippet} = $props();
-	let collapsed = $state(false);
+	let { header, collapsed = false, children }: { header: Snippet; collapsed?: boolean; children: Snippet} = $props();
 </script>

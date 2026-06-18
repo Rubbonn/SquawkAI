@@ -69,17 +69,17 @@
 			{#if Object.keys(documentTree).length > 0}
 				{#await import("./CollapsibleCard.svelte") then { default: CollapsibleCard }}
 					{#each Object.entries(documentTree) as [nation, sections] (nation)}
-						<CollapsibleCard>
+						<CollapsibleCard collapsed>
 							{#snippet header()}
 								<h3>{nation}</h3>
 							{/snippet}
 							{#each Object.entries(sections) as [section, docs] (section)}
-								<CollapsibleCard>
+								<CollapsibleCard collapsed>
 									{#snippet header()}
 										<h4>{section}</h4>
 									{/snippet}
 									{#each docs as doc}
-										<CollapsibleCard>
+										<CollapsibleCard collapsed>
 											{#snippet header()}
 												<h5>{doc.name}</h5>
 												{#if !doc.file_exists}<small class="text-danger"><strong><img class="d-inline-block" src="/icons/triangle-exclamation-solid__text-danger.svg" width="13" height="13" alt="Warning icon"> ATTENTION: The file does not exists in the path, restore the file or remove this document</strong></small>{/if}
