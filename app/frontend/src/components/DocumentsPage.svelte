@@ -52,6 +52,11 @@
 			margin-bottom: var(--space-2);
 		}
 
+		&__search-input {
+			display: block;
+			margin-bottom: var(--space-1);
+		}
+
 		&__actions {
 			display: flex;
 			flex-direction: row;
@@ -78,7 +83,10 @@
 			</div>
 		</div>
 		<div class="documents-page__right-column">
-			<input type="text" id="search" class="documents-page__search" name="search" placeholder="Search a document..." oninput={(e) => handleSearch(e.currentTarget.value)}/>
+			<div class="documents-page__search">
+				<input type="text" id="search" class="documents-page__search-input" name="search" placeholder="Search a document..." oninput={(e) => handleSearch(e.currentTarget.value)}/>
+				<p class="text-small technical">Search is case-insensitive</p>
+			</div>
 			{#if Object.keys(documentTree).length > 0}
 				{#await import("./CollapsibleCard.svelte") then { default: CollapsibleCard }}
 					{#each Object.entries(documentTree) as [nation, sections] (nation)}
@@ -188,5 +196,18 @@
 	}
 
 	const handleSearch = debounce((input: string) => {
+		input = input.toLowerCase();
+		documentTree = {};
+		for(let doc of documentIndex.documents) {
+			if(input === '' || Object.entries(doc).some(([ key, value ]) => typeof value === 'string' && value.toLowerCase().indexOf(input) >= 0)) {
+				if(!documentTree[doc.nation]) {
+					documentTree[doc.nation] = {};
+				}
+				if(!documentTree[doc.nation][doc.section]) {
+					documentTree[doc.nation][doc.section] = [];
+				}
+				documentTree[doc.nation][doc.section].push(doc);
+			}
+		}
 	});
 </script>
