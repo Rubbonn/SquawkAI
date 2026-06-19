@@ -185,4 +185,4 @@ L'app desktop caricherà automaticamente i file dalla cartella `app/frontend/dis
 
 ## Licenza
 
-ISC
+GNU GPLv3

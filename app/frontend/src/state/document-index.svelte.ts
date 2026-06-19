@@ -1,3 +1,5 @@
+// Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+
 import { bridge } from '../services/backend-bridge';
 
 interface Document {

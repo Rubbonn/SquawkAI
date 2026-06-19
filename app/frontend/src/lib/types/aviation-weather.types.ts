@@ -1,3 +1,5 @@
+// Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
 export type CloudCover = "CLR" | "CAVOK" | "FEW" | "SCT" | "BKN" | "OVC" | "OVX";

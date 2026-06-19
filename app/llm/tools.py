@@ -1,3 +1,7 @@
+'''
+Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+'''
+
 from app.state.map import MapState, map_state
 from app.utils.documents import document_index
 from base64 import standard_b64encode

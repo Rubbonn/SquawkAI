@@ -1,3 +1,5 @@
+// Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+
 import { QWebChannel, type QWebChannelTransport, type QWebChannelInstance } from "../lib/qwebchannel.js";
 import type { Metar, Taf, MapState } from "../lib/types";
 import type { Document } from "../state/document-index.svelte";

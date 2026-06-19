@@ -1,3 +1,7 @@
+'''
+Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+'''
+
 from app.utils.models import Document
 from app.llm.llm import get_chat_model
 from base64 import standard_b64encode

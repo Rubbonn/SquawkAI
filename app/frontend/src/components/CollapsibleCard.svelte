@@ -1,3 +1,5 @@
+<!-- Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3 -->
+
 <style lang="scss">
 	.collapsible-card {
 		padding: var(--space-2);
@@ -23,7 +25,7 @@
 
 		&__body {
 			opacity: 1;
-			max-height: 1000px;
+			max-height: 9999px;
 			transition: max-height 300ms ease-in-out, opacity 300ms ease-in-out;
 			margin-top: var(--space-2);
 

@@ -1,3 +1,5 @@
+<!-- Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3 -->
+
 <style lang="scss">
 	.vertical-menu {
 		margin-bottom: var(--space-4);

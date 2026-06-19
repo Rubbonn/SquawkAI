@@ -1,3 +1,7 @@
+'''
+Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+'''
+
 from pydantic import BaseModel, Field
 from typing import Literal, Optional
 

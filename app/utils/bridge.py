@@ -1,3 +1,7 @@
+'''
+Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+'''
+
 from app.llm.llm import get_chat_agent
 from app.llm.tools import get_airport_weather, get_available_documents, get_document, set_map_state, get_map_state, get_current_datetime
 from app.utils.documents import document_index

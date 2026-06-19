@@ -1,3 +1,5 @@
+// Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3
+
 export interface QWebChannelTransport {
   send: (message: string | object) => void;
   onmessage?: (message: { data: string | object }) => void;

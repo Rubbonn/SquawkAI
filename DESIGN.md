@@ -81,3 +81,6 @@ Cockpit Tech is a compact dark UI for fast scanning and operational clarity. The
   - Background `bg-surface`, 1px `border-default`, radius `lg`, padding `md`.
 - Highlights:
   - Light orange tint + left border in `accent`.
+
+## License
+Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3

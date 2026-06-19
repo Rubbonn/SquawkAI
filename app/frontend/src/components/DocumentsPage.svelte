@@ -1,3 +1,5 @@
+<!-- Copyright (C) 2026  Ruben Giuriato - Licensed under GNU GPLv3 -->
+
 <style lang="scss">
 	.documents-page {
 		max-height: 100%;
@@ -46,6 +48,10 @@
 			text-align: center;
 		}
 
+		&__search {
+			margin-bottom: var(--space-2);
+		}
+
 		&__actions {
 			display: flex;
 			flex-direction: row;
@@ -72,6 +78,7 @@
 			</div>
 		</div>
 		<div class="documents-page__right-column">
+			<input type="text" id="search" class="documents-page__search" name="search" placeholder="Search a document..." oninput={(e) => handleSearch(e.currentTarget.value)}/>
 			{#if Object.keys(documentTree).length > 0}
 				{#await import("./CollapsibleCard.svelte") then { default: CollapsibleCard }}
 					{#each Object.entries(documentTree) as [nation, sections] (nation)}
@@ -170,5 +177,16 @@
 			tree[doc.nation][doc.section].push(doc);
 		}
 		return tree;
+	});
+
+	const debounce = <T extends unknown[]>(func: (...args: T) => void, timeout: number = 300) => {
+		let timer: ReturnType<typeof setTimeout>;
+		return (...args: T) => {
+			clearTimeout(timer);
+			timer = setTimeout(() => { func(...args) }, timeout);
+		};
+	}
+
+	const handleSearch = debounce((input: string) => {
 	});
 </script>
