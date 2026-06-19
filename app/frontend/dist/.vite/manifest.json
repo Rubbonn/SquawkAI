@@ -1,33 +1,46 @@
 {
-  "_disclose-version-Bm-fTgTf.js": {
-    "file": "assets/disclose-version-Bm-fTgTf.js",
+  "_disclose-version-CzWgas3G.js": {
+    "file": "assets/disclose-version-CzWgas3G.js",
     "name": "disclose-version"
   },
   "index.html": {
-    "file": "assets/index-COLASZs8.js",
+    "file": "assets/index-B2syEchC.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_disclose-version-Bm-fTgTf.js"
+      "_disclose-version-CzWgas3G.js"
     ],
     "dynamicImports": [
-      "src/components/AirportWeatherCard.svelte"
+      "src/components/AirportWeatherCard.svelte",
+      "src/components/CollapsibleCard.svelte"
     ],
     "css": [
-      "assets/index-vAWHuoae.css"
+      "assets/index-CK4Miyez.css"
     ]
   },
   "src/components/AirportWeatherCard.svelte": {
-    "file": "assets/AirportWeatherCard-BgvSNk-t.js",
+    "file": "assets/AirportWeatherCard-DA8mkOmK.js",
     "name": "AirportWeatherCard",
     "src": "src/components/AirportWeatherCard.svelte",
     "isDynamicEntry": true,
     "imports": [
-      "_disclose-version-Bm-fTgTf.js"
+      "_disclose-version-CzWgas3G.js"
     ],
     "css": [
       "assets/AirportWeatherCard-DASy0Llz.css"
+    ]
+  },
+  "src/components/CollapsibleCard.svelte": {
+    "file": "assets/CollapsibleCard-CyG76Bma.js",
+    "name": "CollapsibleCard",
+    "src": "src/components/CollapsibleCard.svelte",
+    "isDynamicEntry": true,
+    "imports": [
+      "_disclose-version-CzWgas3G.js"
+    ],
+    "css": [
+      "assets/CollapsibleCard-DqoGZiHy.css"
     ]
   }
 }
