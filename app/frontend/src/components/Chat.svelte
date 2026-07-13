@@ -9,6 +9,25 @@
 		flex: 1;
 		min-height: 0;
 
+		&__list {
+			hr {
+				text-align: center;
+				overflow: visible;
+				position: relative;
+				height: 1px;
+
+				&::after {
+					content: 'ACTIVE CHAT';
+					padding: 0 var(--space-2);
+					position: absolute;
+					transform: translate(-50%, -50%);
+					background-color: transparent;
+					backdrop-filter: blur(4px);       /* sfoca ciò che sta dietro */
+					-webkit-backdrop-filter: blur(4px);
+				}
+			}
+		}
+
 		&__history {
 			display: flex;
 			flex-direction: column;
@@ -82,6 +101,15 @@
 
 <div class="chat h-100">
 	<button class="btn btn-primary w-100" onclick={newChatHandler}>New Chat</button>
+	<div class="chat__list">
+		<p class="technical text-small">RECENT CHATS</p>
+		<ul>
+			{#each chatList.chats as chat}
+				<li><button class="btn btn-invisible">{chat.name}</button></li>
+			{/each}
+		</ul>
+		<hr class="text-small technical" />
+	</div>
 	<div class="chat__history h-100">
 		{#each messageHistory as { role, content }}
 			{@render renderMessage(role, content)}
@@ -102,6 +130,7 @@
 <script lang="ts">
 	import { bridge } from '../services/backend-bridge.ts';
 	import { settings } from '../state/settings.svelte.ts';
+	import { chatList } from '../state/chat-list.svelte.ts';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	marked.use(markedKatex({ throwOnError: false }));

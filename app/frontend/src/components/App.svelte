@@ -260,6 +260,7 @@ Copyright (C) 2026  Ruben Giuriato
 			border-top: 1px solid var(--border-default);
 			margin: var(--space-2) 0;
 			width: 100%;
+			height: 1px;
 		}
 
 		.ui-card {
