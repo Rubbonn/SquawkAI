@@ -163,6 +163,7 @@
 	import { bridge } from '../services/backend-bridge.ts';
 	import { settings } from '../state/settings.svelte.ts';
 	import { chatList } from '../state/chat-list.svelte.ts';
+	import { mapState } from '../state/map-elements.svelte.ts';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	marked.use(markedKatex({ throwOnError: false }));
@@ -202,6 +203,10 @@
 	const handleMessageReceived = (newMessage: string) => {
 		const parsedMessage = marked.parse(newMessage) as string;
 		chatList.chats[activeChatId].messageList.push({ role: 'assistant', content: parsedMessage });
+		chatList.chats[activeChatId].mapState = {
+			points: [...mapState.points],
+			lines: [...mapState.lines]
+		};
 		pendingMessages++;
 		adjustTextareaHeight();
 	};
@@ -210,7 +215,9 @@
 
 	const newChatHandler = async () => {
 		activeChatId = await bridge.newThread();
-		chatList.chats[activeChatId] = { id: activeChatId, name: `Chat ${Object.keys(chatList.chats).length + 1}`, messageList: [] };
+		chatList.chats[activeChatId] = { id: activeChatId, name: `Chat ${Object.keys(chatList.chats).length + 1}`, messageList: [], mapState: { points: [], lines: [] } };
+		mapState.points = [];
+		mapState.lines = [];
 		adjustTextareaHeight();
 	}
 
@@ -222,6 +229,8 @@
 		}
 
 		activeChatId = chatId;
+		mapState.points = chat.mapState.points;
+		mapState.lines = chat.mapState.lines;
 		adjustTextareaHeight();
 	}
 </script>

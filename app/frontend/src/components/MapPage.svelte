@@ -107,9 +107,6 @@
 	});
 
 	$effect(() => {
-		if(mapState.points.length === 0 && mapState.lines.length === 0)
-			return;
-
 		const resetMap = () => {
 			for(const marker of addedMarkers)
 				marker.remove();
@@ -123,6 +120,11 @@
 			addedMarkers.length = 0;
 			addedSources.length = 0;
 			addedLayers.length = 0;
+		}
+
+		if(mapState.points.length === 0 && mapState.lines.length === 0) {
+			resetMap();
+			return;
 		}
 
 		const updateMap = () => {
