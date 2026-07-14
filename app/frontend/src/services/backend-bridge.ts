@@ -14,7 +14,7 @@ interface BackendBridge {
 	removeDocument(name: string): Promise<void>;
 	getDocuments(): Promise<Document[]>;
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
-	sendMessage(message: string): Promise<void>;
+	sendMessage(chatId: string, message: string): Promise<void>;
 	messageReceived(callback: (message: string) => void): void;
 	newThread(): Promise<string>;
 	getChatList(): Promise<Record<string, { id: string; name: string; messageList: { role: 'user' | 'assistant', content: string }[] }>>;
@@ -181,7 +181,7 @@ if(hasWebChannelSupport) {
 			webChannel || await getWebChannel();
 			webChannel!.objects.bridge.document_index_updated.connect(callback);
 		},
-		sendMessage: async (message: string) => {
+		sendMessage: async (chatId: string, message: string) => {
 			webChannel || await getWebChannel();
 			return new Promise((resolve, reject) => {
 				try {
@@ -205,7 +205,7 @@ if(hasWebChannelSupport) {
 						reject(new Error('Backend method call timed out after 10 minutes'));
 					}, 10 * 60 * 1000); // 10 minutes timeout for long-running operations
 					webChannel!.objects.bridge.stop_message_stream.connect(onFinish);
-					webChannel!.objects.bridge.send_message(message);
+					webChannel!.objects.bridge.send_message(chatId, message);
 				} catch(error) {
 					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
 				}
@@ -290,8 +290,8 @@ if(hasWebChannelSupport) {
 		documentIndexUpdated: async (callback: (documents: Document[]) => void) => {
 			// Mock implementation, does nothing
 		},
-		sendMessage: async (message: string) => {
-			console.log('Message to backend (mock):', message);
+		sendMessage: async (chatId: string, message: string) => {
+			console.log(`Message to backend (mock) [Chat ID: ${chatId}]:`, message);
 		},
 		messageReceived: async (callback: (message: string) => void) => {
 			// Mock implementation, does nothing

@@ -9,7 +9,13 @@ const chatList: {
 		messageList: { role: 'user' | 'assistant', content: string }[];
 	}>;
 } = $state({
-	chats: await bridge.getChatList()
+	chats: {
+		'Chat 1': {
+			id: 'Chat 1',
+			name: 'Chat 1',
+			messageList: [],
+		}
+	}
 });
 
 export { chatList };

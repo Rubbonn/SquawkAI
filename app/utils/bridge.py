@@ -121,10 +121,10 @@ class Bridge(QObject):
 	def get_documents(self) -> list[dict]:
 		return document_index.documents
 	
-	@Slot(str, result=None)
-	def send_message(self, message: str) -> None:
+	@Slot(str, str, result=None)
+	def send_message(self, thread_id: str, message: str) -> None:
 		def task(message: str) -> dict[str, str | bool]:
-			thread_config = {"thread_id": self._thread_id}
+			thread_config = {"thread_id": thread_id}
 			try:
 				agent = get_chat_agent(tools=[get_airport_weather, get_available_documents, get_document, get_map_state, set_map_state, get_current_datetime], system_prompt=_system_message)
 				for response in agent.stream({'messages': [HumanMessage(content=message)]}, config=RunnableConfig(configurable=thread_config), stream_mode='updates'):
@@ -147,9 +147,9 @@ class Bridge(QObject):
 		worker.finished.connect(lambda: self._workers.discard(worker))
 		worker.start()
 
-	@Slot()
-	def new_thread(self) -> None:
-		self._thread_id = str(uuid4())
+	@Slot(result=str)
+	def new_thread(self) -> str:
+		return str(uuid4())
 
 	@Slot(str, result=None)
 	def open_file(self, filename: str):

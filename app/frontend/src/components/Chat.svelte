@@ -36,6 +36,7 @@
 			margin-bottom: var(--space-1);
 			padding: var(--space-2);
 			border-radius: var(--radius-md);
+			cursor: pointer;
 
 			img {
 				display: inline-block;
@@ -45,6 +46,11 @@
 
 			&:hover {
 				background-color: var(--bg-elevated);
+			}
+
+			&.active {
+				background-color: var(--accent);
+				color: var(--accent-on);
 			}
 		}
 
@@ -125,7 +131,7 @@
 		<p class="technical text-small">RECENT CHATS</p>
 		<ul class="chat__list-items">
 			{#each Object.values(chatList.chats) as chat}
-				<li class="chat__list-item" onclick={() => loadChat(chat.id)}><img src="/icons/chat.png" alt="Chat Icon" /> {chat.name}</li>
+				<li class="chat__list-item {chat.id === activeChatId ? 'active' : ''}" onclick={() => loadChat(chat.id)} onkeyup={(e) => { if (e.key === 'Enter' || e.key === ' ') { loadChat(chat.id); } }}><img src="/icons/chat.png" alt="Chat Icon" /> {chat.name}</li>
 			{/each}
 		</ul>
 		<hr class="text-small technical" />
@@ -176,7 +182,7 @@
 		pendingMessages++;
 		waitingForResponse = true;
 		try {
-			await bridge.sendMessage(message);
+			await bridge.sendMessage(activeChatId, message);
 			message = '';
 		} catch(error) {
 			chatList.chats[activeChatId].messageList.splice(-1, pendingMessages);
