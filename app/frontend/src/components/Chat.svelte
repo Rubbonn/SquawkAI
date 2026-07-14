@@ -52,6 +52,12 @@
 				background-color: var(--accent);
 				color: var(--accent-on);
 			}
+
+			&.disabled {
+				pointer-events: none;
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
 		}
 
 		&__history {
@@ -126,12 +132,12 @@
 {/snippet}
 
 <div class="chat h-100">
-	<button class="btn btn-primary w-100" onclick={newChatHandler}>New Chat</button>
+	<button class="btn btn-primary w-100" onclick={newChatHandler} disabled={waitingForResponse}>New Chat</button>
 	<div class="chat__list">
 		<p class="technical text-small">RECENT CHATS</p>
 		<ul class="chat__list-items">
 			{#each Object.values(chatList.chats) as chat}
-				<li class="chat__list-item {chat.id === activeChatId ? 'active' : ''}" onclick={() => loadChat(chat.id)} onkeyup={(e) => { if (e.key === 'Enter' || e.key === ' ') { loadChat(chat.id); } }}><img src="/icons/chat.png" alt="Chat Icon" /> {chat.name}</li>
+				<li class="chat__list-item {chat.id === activeChatId ? 'active' : ''} {waitingForResponse ? 'disabled' : ''}" onclick={() => loadChat(chat.id)} onkeyup={(e) => { if (e.key === 'Enter' || e.key === ' ') { loadChat(chat.id); } }}><img src="/icons/chat.png" alt="Chat Icon" /> {chat.name}</li>
 			{/each}
 		</ul>
 		<hr class="text-small technical" />
