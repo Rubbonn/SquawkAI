@@ -16,8 +16,8 @@ interface BackendBridge {
 	documentIndexUpdated(callback: (documents: Document[]) => void): void;
 	sendMessage(message: string): Promise<void>;
 	messageReceived(callback: (message: string) => void): void;
-	newThread(): Promise<void>;
-	getChatList(): Promise<Array<{ id: string; name: string; messageList: string[] }>>;
+	newThread(): Promise<string>;
+	getChatList(): Promise<Record<string, { id: string; name: string; messageList: { role: 'user' | 'assistant', content: string }[] }>>;
 	mapStateUpdated(callback: (state: MapState) => void): void;
 	openFile(filename: string): void;
 }
@@ -225,6 +225,16 @@ if(hasWebChannelSupport) {
 				}
 			});
 		},
+		getChatList: async () => {
+			webChannel || await getWebChannel();
+			return new Promise((resolve, reject) => {
+				try {
+					webChannel!.objects.bridge.get_chat_list(resolve);
+				} catch(error) {
+					reject(new Error(`Failed to call backend method: ${error instanceof Error ? error.message : String(error)}`));
+				}
+			});
+		},
 		mapStateUpdated: async (callback: (state: MapState) => void) => {
 			webChannel || await getWebChannel();
 			webChannel!.objects.bridge.map_state_updated.connect(callback);
@@ -336,14 +346,15 @@ Present id magna pretium, dictum sem interdum, tempor erat. Vivamus sed eros tri
 		},
 		newThread: async () => {
 			console.log('New thread created (mock)');
+			return 'abcdefghijklmnopqrstuvwxyz0123456789'.split('').filter(() => Math.random() < 0.5).join('');
 		},
 		getChatList: async () => {
 			// Mock implementation, returns a sample chat list
-			return [
-				{ id: '1', name: 'General Chat', messageList: ['Hello!', 'How are you?'] },
-				{ id: '2', name: 'Project Discussion', messageList: ['Project update?', 'Deadline is next week.'] },
-				{ id: '3', name: 'Random Talk', messageList: ['Did you watch the game?', 'Yes, it was amazing!'] }
-			];
+			return {
+				'1': { id: '1', name: 'General Chat', messageList: [{ role: 'user', content: 'Hello!' }, { role: 'assistant', content: 'How are you?' }] },
+				'2': { id: '2', name: 'Project Discussion', messageList: [{ role: 'user', content: 'Project update?' }, { role: 'assistant', content: 'Deadline is next week.' }] },
+				'3': { id: '3', name: 'Random Talk', messageList: [{ role: 'user', content: 'Did you watch the game?' }, { role: 'assistant', content: 'Yes, it was amazing!' }] }
+			};
 		},
 		mapStateUpdated: async (callback: (state: MapState) => void) => {
 			callback({'points': [{'lat': 45.6408, 'lng': 8.7347, 'name': 'MMP VOR/DME (Malpensa)'}, {'lat': 45.6467, 'lng': 9.0217, 'name': 'SRN VOR/DME (Saronno)'}, {'lat': 45.7151, 'lng': 8.639, 'name': 'D6 MMP (RDL 318/6 NM)'}, {'lat': 45.7164, 'lng': 8.8603, 'name': 'IRKED'}, {'lat': 45.5242, 'lng': 8.7352, 'name': 'MC651'}, {'lat': 45.2375, 'lng': 8.4031, 'name': 'FARAK'}], 'lines': [{'points': [{'lat': 45.6408, 'lng': 8.7347, 'name': 'MMP VOR/DME (Malpensa)'}, {'lat': 45.7151, 'lng': 8.639, 'name': 'D6 MMP (RDL 318/6 NM)'}, {'lat': 45.7164, 'lng': 8.8603, 'name': 'IRKED (RDL 303/8 NM SRN)'}], 'name': 'IRKED 8E (RWY 35L)'}, {'points': [{'lat': 45.6408, 'lng': 8.7347, 'name': 'MMP VOR/DME (Malpensa)'}, {'lat': 45.5242, 'lng': 8.7352, 'name': 'MC651 (RDL 177/7 NM)'}, {'lat': 45.2375, 'lng': 8.4031, 'name': 'FARAK'}], 'name': 'FARAK 5Y (RWY 17L/R)'}]});

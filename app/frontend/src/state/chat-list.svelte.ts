@@ -3,10 +3,10 @@
 import { bridge } from '../services/backend-bridge.ts';
 
 const chatList: {
-	chats: Array<{
+	chats: Record<string, {
 		id: string;
 		name: string;
-		messageList: string[];
+		messageList: { role: 'user' | 'assistant', content: string }[];
 	}>;
 } = $state({
 	chats: await bridge.getChatList()

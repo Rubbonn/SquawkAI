@@ -28,6 +28,26 @@
 			}
 		}
 
+		&__list-items {
+			padding: var(--space-2);
+		}
+
+		&__list-item {
+			margin-bottom: var(--space-1);
+			padding: var(--space-2);
+			border-radius: var(--radius-md);
+
+			img {
+				display: inline-block;
+				vertical-align: middle;
+				padding-right: var(--space-1);
+			}
+
+			&:hover {
+				background-color: var(--bg-elevated);
+			}
+		}
+
 		&__history {
 			display: flex;
 			flex-direction: column;
@@ -103,15 +123,15 @@
 	<button class="btn btn-primary w-100" onclick={newChatHandler}>New Chat</button>
 	<div class="chat__list">
 		<p class="technical text-small">RECENT CHATS</p>
-		<ul>
-			{#each chatList.chats as chat}
-				<li><button class="btn btn-invisible">{chat.name}</button></li>
+		<ul class="chat__list-items">
+			{#each Object.values(chatList.chats) as chat}
+				<li class="chat__list-item" onclick={() => loadChat(chat.id)}><img src="/icons/chat.png" alt="Chat Icon" /> {chat.name}</li>
 			{/each}
 		</ul>
 		<hr class="text-small technical" />
 	</div>
 	<div class="chat__history h-100">
-		{#each messageHistory as { role, content }}
+		{#each chatList.chats[activeChatId].messageList as { role, content }}
 			{@render renderMessage(role, content)}
 		{/each}
 		<div class="chat__loader" class:d-none={!waitingForResponse}><img src="/icons/compass-regular__text-primary.svg" class="spin" alt="Loading..." width="64" height="64"/></div>
@@ -137,7 +157,7 @@
 
 	let textarea: HTMLTextAreaElement;
 	let message: string = $state('');
-	let messageHistory: { role: 'user' | 'assistant', content: string }[] = $state([]);
+	let activeChatId: string = $state(Object.keys(chatList.chats)[0] || '');
 	let waitingForResponse: boolean = $state(false);
 	let pendingMessages: number = 0;
 
@@ -152,14 +172,14 @@
 		if(message.trim() === '' || waitingForResponse)
 			return;
 
-		messageHistory.push({ role: 'user', content: message });
+		chatList.chats[activeChatId].messageList.push({ role: 'user', content: message });
 		pendingMessages++;
 		waitingForResponse = true;
 		try {
 			await bridge.sendMessage(message);
 			message = '';
 		} catch(error) {
-			messageHistory.splice(-1, pendingMessages);
+			chatList.chats[activeChatId].messageList.splice(-1, pendingMessages);
 			adjustTextareaHeight();
 			alert(`Error sending message: ${error instanceof Error ? error.message : String(error)}`);
 		}
@@ -169,7 +189,7 @@
 
 	const handleMessageReceived = (newMessage: string) => {
 		const parsedMessage = marked.parse(newMessage) as string;
-		messageHistory.push({ role: 'assistant', content: parsedMessage });
+		chatList.chats[activeChatId].messageList.push({ role: 'assistant', content: parsedMessage });
 		pendingMessages++;
 		adjustTextareaHeight();
 	};
@@ -177,8 +197,19 @@
 	bridge.messageReceived(handleMessageReceived);
 
 	const newChatHandler = async () => {
-		await bridge.newThread();
-		messageHistory = [];
+		activeChatId = await bridge.newThread();
+		chatList.chats[activeChatId] = { id: activeChatId, name: `Chat ${Object.keys(chatList.chats).length + 1}`, messageList: [] };
+		adjustTextareaHeight();
+	}
+
+	const loadChat = (chatId: string) => {
+		const chat = chatList.chats[chatId];
+		if(!chat) {
+			alert(`Chat with ID ${chatId} not found.`);
+			return;
+		}
+
+		activeChatId = chatId;
 		adjustTextareaHeight();
 	}
 </script>
